@@ -131,12 +131,12 @@
 	.wow-wizard-content {
 		padding:0;
 	}
-	.single-image-choices {
+	.multiple-image-choices {
 		width:100%;
 		display:block;
 		float:left;
 	}
-	.single-image-choice {
+	.multiple-image-choice {
 		width:120px;
 		height:115px;
 		margin-bottom:20px;
@@ -149,7 +149,7 @@
 		transition:1s;
 		-webkit-transition:1s;
 		-moz-transition:1s;
-		.single-image-container {
+		.multiple-image-container {
 			width:100%;
 			height:70px;
 			background-size:contain;
