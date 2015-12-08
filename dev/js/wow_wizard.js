@@ -14,7 +14,7 @@
 					email: "Wrong e-mail format."
 				},
 				multiple_choice: {
-					required: "You have to fill in all required fields.",
+					required: "You have to choose at least one of the choices.",
 				},
 				single_choice: {
 					required: "You have to fill in all required fields.",
@@ -41,7 +41,8 @@
 					circleColor: '#C23640',
 					outlineColor: '#F44A56',
 					lineColor: '#F44A56',
-					buttonBackgroundColor: '#F44A56',
+					activeButtonBackgroundColor: '#F44A56',
+					passiveButtonBackgroundColor: '#FFF',
 					buttonTextColor: '#FFF',
 					imageChoiceBorderColor: "#F44A56",
 					imageChoiceCircleBackgroundColor: "#FFB3B8"
@@ -60,13 +61,17 @@
 					$step_html.find('.wow-wizard-step-indicators').css('border-bottom', '2px solid '+choice.lineColor);
 
 					// Next Step Button
-					$step_html.find('#wow-wizard-next-step, .single-choice-button').css('background-color', choice.buttonBackgroundColor);
+					$step_html.find('#wow-wizard-next-step, .single-choice-button').css('background-color', choice.activeButtonBackgroundColor);
 					$step_html.find('#wow-wizard-next-step, .single-choice-button').css('color', choice.buttonTextColor);
 
 					// Single Image Choice
 					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
 					$step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid '+choice.imageChoiceBorderColor);
 					
+					// Multiple Choice Buttons
+					$step_html.find('.fancy-checkbox .button').css('background-color', choice.passiveButtonBackgroundColor);
+					$step_html.find('.fancy-checkbox .button.active').css('background-color', choice.activeButtonBackgroundColor);
+
 					// Form Elements
 					$step_html.find('input[type=text], textarea').css('outline', 'none');
 					$step_html.find('input[type=text]:focus, textarea:focus').css({
@@ -110,7 +115,7 @@
 				isStepTypeAllowed: function($step) {
 					return privateFields.allowedStepTypes.indexOf($step.type) != -1;
 				},
-				debug: false
+				debug: true
 			};
 		})();
 
@@ -138,13 +143,13 @@
 	            // Update the button's color
 	            if (isChecked) {
 	                $button
-	                    .removeClass('btn-default')
-	                    .addClass('btn-' + $button.data('color') + ' active');
+	                    .addClass('active')
+	                    .css('background-color', THEME.colors.activeButtonBackgroundColor);
 	            }
 	            else {
 	                $button
-	                    .removeClass('btn-' + $button.data('color') + ' active')
-	                    .addClass('btn-default');
+	                    .removeClass('active')
+	                    .css('background-color', THEME.colors.passiveButtonBackgroundColor);
 	            }
 	        }
 
@@ -172,7 +177,6 @@
 			            $checkbox.prop('checked', !$checkbox.is(':checked'));
 			            $checkbox.triggerHandler('change');
 			            _updateDisplay($button, $checkbox);
-						$button.css('background-color', THEME.colors.buttonBackgroundColor);
 			        });
 			        $checkbox.on('change', function () {
 			            _updateDisplay($button, $checkbox);
@@ -351,7 +355,8 @@
 						}
 					});
 					if(answers.length == 0) {
-						alertMessage = $step.errors.required ? $step.errors.required : wizard.settings.errors.form.required;
+						console.log(wizard.settings.errors.multiple_choice);
+						alertMessage = $step.errors && $step.errors.required ? $step.errors.required : wizard.settings.errors.multiple_choice.required;
 						return _stepFailed($step, alertMessage);
 					}
 					$step.given_answer = answers;
@@ -370,7 +375,7 @@
 							answers[index] = $(this).val();
 						} else if($(this).data('required')) {
 							stepFailed = true;
-							alertMessage = $step.errors.required ? $step.errors.required : wizard.settings.errors.form.required;
+							alertMessage = $step.errors && $step.errors.required ? $step.errors.required : wizard.settings.errors.form.required;
 							$(this).css('border-color', 'red');
 							return true; // Works as a "continue" statement in jQuery each loop.
 						}
@@ -379,7 +384,7 @@
 							if(!re.test($(this).val())) {
 								stepFailed = true;
 								$(this).css('border-color', 'red');
-								alertMessage = $step.errors.email ? $step.errors.email : wizard.settings.errors.form.email;
+								alertMessage = $step.errors && $step.errors.email ? $step.errors.email : wizard.settings.errors.form.email;
 							}
 							return true; // Works as a "continue" statement in jQuery each loop.
 						}
@@ -402,7 +407,7 @@
 						if(CONFIG.debug) console.log($step.given_answer);
 						return true;
 					} else {
-						alertMessage = $step.errors.required ? $step.errors.required : wizard.settings.errors.multiple_image_choice.required;
+						alertMessage = $step.errors && $step.errors.required ? $step.errors.required : wizard.settings.errors.multiple_image_choice.required;
 						return _stepFailed($step, alertMessage);
 					}
 				case 'textarea':
@@ -583,9 +588,9 @@
 						var $choices = $('<div class="multiple-image-choices"></div>');
 						for(var i = 0; i < $step.answers.length; i++) {
 							var choice_info = $step.answers[i];
-							var $choice = $('<div class="multiple-image-choice" data-slug="'+choice_info.slug+'"></div>');
+							var $choice = $('<div class="multiple-image-choice" data-slug="'+choice_info.value+'"></div>');
 							var $choice_image = $('<div class="multiple-image-container" style="background-image:url(\''+choice_info.imageUrl+'\')"/>');
-							var $choice_text = $('<p>'+choice_info.name+'</p>');
+							var $choice_text = $('<p>'+choice_info.text+'</p>');
 							var $circle_select = $('<div class="circle-select"><div class="background"></div><div class="inner-circle-icon"></div></div>');
 
 							$choice.append($choice_image);

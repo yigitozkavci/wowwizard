@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="../../dist/js/wow_wizard.min.js"></script>
+	<script type="text/javascript" src="../../dev/js/wow_wizard.js"></script>
 	<script type="text/javascript">
 		$('.wow-wizard').wowWizard({
 		    theme: 'pomegranate',
@@ -29,18 +29,18 @@
 		            questionDescription: 'Select your pokemon!',
 		            answers: [
 		                {
-		                    name: 'Squirtle',
-		                    slug: 'squirtle',
+		                    text: 'Squirtle',
+		                    value: 'squirtle',
 		                    imageUrl: '../img/1.png'
 		                },
 		                {
-		                    name: 'Bulbasaur',
-		                    slug: 'bulbasaur',
+		                    text: 'Bulbasaur',
+		                    value: 'bulbasaur',
 		                    imageUrl: '../img/2.png'
 		                },
 		                {
-		                    name: 'Charmander',
-		                    slug: 'charmander',
+		                    text: 'Charmander',
+		                    value: 'charmander',
 		                    imageUrl: '../img/3.png'
 		                },
 		            ],
@@ -169,11 +169,7 @@
 		    	console.log("Wizard is completed. Here is the data: ");
 		        console.log(data);
 		    },
-		    errors: {
-		        multiple_choice: "You should choose at least one of the choices.",
-		    },
-		    html: true,
-
+		    html: true
 		});
 	</script>
 </body>
