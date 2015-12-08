@@ -64,8 +64,8 @@
 					$step_html.find('#wow-wizard-next-step, .single-choice-button').css('color', choice.buttonTextColor);
 
 					// Single Image Choice
-					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
-					$step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid '+choice.imageChoiceBorderColor);
+					$step_html.find('.single-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
+					$step_html.find('.single-image-choice, .single-image-choice .circle-select').css('border', '2px solid '+choice.imageChoiceBorderColor);
 					
 					// Form Elements
 					$step_html.find('input[type=text], textarea').css('outline', 'none');
@@ -87,7 +87,7 @@
 						});
 					}); 
 					$step_html.find('.input-col-6 .star-icon').css('color', choice.outlineColor);
-					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color');
+					$step_html.find('.single-image-choice .circle-select .background').css('background-color');
 
 					$step_html.find('.loader').css('background-image', "url('"+wizard.settings.loader+"')");
 				}
@@ -100,8 +100,8 @@
 		// Wizard configuration consisting of constants and private methods.
 		var CONFIG = (function() {
 			var privateFields = {
-				'shouldHaveNextButton': ['form', 'multiple_choice', 'multiple_image_choice', 'textarea'],
-				'allowedStepTypes': ['single_choice', 'form', 'multiple_choice', 'multiple_image_choice', 'textarea']
+				'shouldHaveNextButton': ['form', 'multiple_choice', 'single_image_choice', 'textarea'],
+				'allowedStepTypes': ['single_choice', 'form', 'multiple_choice', 'single_image_choice', 'textarea']
 			};
 			return {
 				shouldHaveNextButton: function($step) {
@@ -217,7 +217,7 @@
 				_prepareEventHandlers($step, $step_html);
 				THEME.apply($step_html);
 
-				var loadingTime = $step.type == 'multiple_image_choice' ? 1000 : 300;
+				var loadingTime = $step.type == 'single_image_choice' ? 1000 : 300;
 				setTimeout(function() {
 					wizard.find('.wow-wizard-content').animate({
 						opacity:1
@@ -287,16 +287,16 @@
 			}
 
 			// Single image choice handler.
-			if($step.type == 'multiple_image_choice') {
-				var $multiple_image_choices = wizard.find('.multiple-image-choice');
-				$multiple_image_choices.each(function(index) {
-					var $multiple_image_choice = $(this);
-					$multiple_image_choice.isAvailable = true;
-					$multiple_image_choice.click(function() {
-						if($multiple_image_choice.data('selected')) {
-							_unSelectElement('multiple_image_choice', $multiple_image_choice);
+			if($step.type == 'single_image_choice') {
+				var $single_image_choices = wizard.find('.single-image-choice');
+				$single_image_choices.each(function(index) {
+					var $single_image_choice = $(this);
+					$single_image_choice.isAvailable = true;
+					$single_image_choice.click(function() {
+						if($single_image_choice.data('selected')) {
+							_unSelectElement('single_image_choice', $single_image_choice);
 						} else {
-							_selectElement('multiple_image_choice', $multiple_image_choice);
+							_selectElement('single_image_choice', $single_image_choice);
 						}
 					});
 				});
@@ -388,10 +388,10 @@
 					$step.given_answer = answers;
 					if(CONFIG.debug) console.log($step.given_answer);
 					return stepFailed ? _stepFailed($step, alertMessage) : true;
-				case 'multiple_image_choice':
+				case 'single_image_choice':
 					var answers = [];
 
-					var $konut_tipi_choices = wizard.find(".multiple-image-choice");
+					var $konut_tipi_choices = wizard.find(".single-image-choice");
 					$konut_tipi_choices.each(function(index) {
 						if($(this).data('selected')) {
 							answers.push($(this).data('slug'));
@@ -402,7 +402,7 @@
 						if(CONFIG.debug) console.log($step.given_answer);
 						return true;
 					} else {
-						alertMessage = $step.errors.required ? $step.errors.required : wizard.settings.errors.multiple_image_choice.required;
+						alertMessage = $step.errors.required ? $step.errors.required : wizard.settings.errors.single_image_choice.required;
 						return _stepFailed($step, alertMessage);
 					}
 				case 'textarea':
@@ -470,13 +470,13 @@
 							}
 						});
 						break;
-					case 'multiple_image_choice':
-						var $konut_choices = wizard.find('.multiple-image-choice');
+					case 'single_image_choice':
+						var $konut_choices = wizard.find('.single-image-choice');
 						$konut_choices.each(function(index) {
 							if($step.given_answer.indexOf($(this).data('slug')) != -1) {
 								var $temp = $(this);
 								$temp.isAvailable = true;
-								_selectElement('multiple_image_choice', $temp);
+								_selectElement('single_image_choice', $temp);
 							}
 						});
 						break;
@@ -578,13 +578,13 @@
 						throw new Error("Input array of a step type \"form\" cannot be empty.");
 					}
 					break;
-				case 'multiple_image_choice':
+				case 'single_image_choice':
 					try {
-						var $choices = $('<div class="multiple-image-choices"></div>');
+						var $choices = $('<div class="single-image-choices"></div>');
 						for(var i = 0; i < $step.answers.length; i++) {
 							var choice_info = $step.answers[i];
-							var $choice = $('<div class="multiple-image-choice" data-slug="'+choice_info.slug+'"></div>');
-							var $choice_image = $('<div class="multiple-image-container" style="background-image:url(\''+choice_info.imageUrl+'\')"/>');
+							var $choice = $('<div class="single-image-choice" data-slug="'+choice_info.slug+'"></div>');
+							var $choice_image = $('<div class="single-image-container" style="background-image:url(\''+choice_info.imageUrl+'\')"/>');
 							var $choice_text = $('<p>'+choice_info.name+'</p>');
 							var $circle_select = $('<div class="circle-select"><div class="background"></div><div class="inner-circle-icon"></div></div>');
 
@@ -653,7 +653,7 @@
 							$inputs.css('border-bottom', '1px solid white');
 						}
 						break;
-					case 'multiple_image_choice':
+					case 'single_image_choice':
 						$element.find(".circle-select").addClass('selected');
 						$element.find(".circle-select .background").fadeIn(200);
 						$element.find(".circle-select .inner-circle-icon").fadeIn(200);
@@ -683,7 +683,7 @@
 							$element.find("input").css('border-bottom', '1px solid #59BAFF');
 						}
 						break;
-					case 'multiple_image_choice':
+					case 'single_image_choice':
 						$element.find(".circle-select").removeClass('selected');
 						$element.find(".circle-select .background").fadeOut(200);
 						$element.find(".circle-select .inner-circle-icon").fadeOut(200);

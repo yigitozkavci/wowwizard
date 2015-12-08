@@ -114,11 +114,11 @@
     float: left; }
   .wow-wizard-step .wow-wizard-content {
     padding: 0; }
-  .wow-wizard-step .multiple-image-choices {
+  .wow-wizard-step .single-image-choices {
     width: 100%;
     display: block;
     float: left; }
-  .wow-wizard-step .multiple-image-choice {
+  .wow-wizard-step .single-image-choice {
     width: 120px;
     height: 115px;
     margin-bottom: 20px;
@@ -131,13 +131,13 @@
     transition: 1s;
     -webkit-transition: 1s;
     -moz-transition: 1s; }
-    .wow-wizard-step .multiple-image-choice .multiple-image-container {
+    .wow-wizard-step .single-image-choice .single-image-container {
       width: 100%;
       height: 70px;
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat; }
-    .wow-wizard-step .multiple-image-choice .circle-select {
+    .wow-wizard-step .single-image-choice .circle-select {
       width: 30px;
       height: 30px;
       border-radius: 100%;
@@ -146,7 +146,7 @@
       left: 50%;
       margin-left: -15px;
       background-color: white; }
-      .wow-wizard-step .multiple-image-choice .circle-select .inner-circle-icon {
+      .wow-wizard-step .single-image-choice .circle-select .inner-circle-icon {
         margin-top: 5px;
         height: 60%;
         margin-left: 20%;
@@ -156,9 +156,9 @@
         position: absolute;
         top: 0;
         color: white; }
-      .wow-wizard-step .multiple-image-choice .circle-select .inner-circle-icon:before {
+      .wow-wizard-step .single-image-choice .circle-select .inner-circle-icon:before {
         content: "\2713 "; }
-      .wow-wizard-step .multiple-image-choice .circle-select .background {
+      .wow-wizard-step .single-image-choice .circle-select .background {
         width: 100%;
         height: 100%;
         position: absolute;
