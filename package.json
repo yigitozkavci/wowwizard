@@ -12,7 +12,10 @@
   "bugs": {
     "url": "https://github.com/yigitozkavci/wowwizard/issues"
   },
-  "homepage": "https://github.com/yigitozkavci/wowwizard",
+  "directories": {
+    "example": "example"
+  },
+  "homepage": "http://yigitozkavci.github.io/wowwizard/",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.1.0",
