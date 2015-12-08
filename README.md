@@ -1,3 +1,4 @@
+![Example Image 1]https://raw.github.com/yigitozkavci/wowwizard/master/img/example_1.png
 # WowWizard - A form wizard for your taste!
 WowWizard is a jQuery plugin that is designed for developers seeking an awesome & multi-purpose form wizard.
 ## Install
