@@ -7,6 +7,8 @@ $ npm install wowwizard
 ```
 ## Getting Started
 Gettings started guide and complete documentation can be found [here](http://yigitozkavci.github.io/wowwizard/).
+
+You can also check out examples directory to get a sneak peek what it looks like.
 # Contributing
 For now, plugin needs theme & front-end improvements. But pull requests for both front-end and back-end are welcomed!
 You need both npm and gulp to edit the /dev/css/.sass and /dev/js/.js files and compile them to /dist/css/.css and /dev/js/.min.js files.
