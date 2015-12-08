@@ -115,7 +115,7 @@
 				isStepTypeAllowed: function($step) {
 					return privateFields.allowedStepTypes.indexOf($step.type) != -1;
 				},
-				debug: true
+				debug: false
 			};
 		})();
 
