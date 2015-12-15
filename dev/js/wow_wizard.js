@@ -130,9 +130,8 @@
 					});
 
 					// Design Style
-					if(wizard.settings.style && wizard.settings.style == 'material') {
-						console.log(styles.material.borderRadius);
-						$step_html.find('input, textarea, button, #wow-wizard-next-step, .multiple-image-choice, .single-choice-button, .wow-wizard-step-indicator').css('border-radius', styles.material.borderRadius);
+					if(wizard.settings.style) {
+						$step_html.find('input, textarea, button, #wow-wizard-next-step, .multiple-image-choice, .single-choice-button, .wow-wizard-step-indicator, #wow-alert').css('border-radius', styles[wizard.settings.style].borderRadius);
 					}
 					// Loader
 					$step_html.find('.loader').css('background-image', "url('"+wizard.settings.loader+"')");
