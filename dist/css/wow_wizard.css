@@ -106,8 +106,6 @@
       margin-right: 5px; }
       .wow-wizard-step .wow-wizard-step-indicator .step-id i {
         line-height: 30px; }
-  .wow-wizard-step .wow-wizard-step-indicator.visited .step-id {
-    background-color: #18908a; }
   .wow-wizard-step .wow-wizard-step-question {
     width: 100%;
     margin-top: 5px;

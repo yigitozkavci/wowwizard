@@ -3,6 +3,9 @@
 
 		'use strict'; // For increased coolness through the code.
 		
+		function warning(message){
+		    console.error("Warning: " + message);
+		}
 		// Default values in which case user does not gives a custom data.
 		$.fn.wowWizard.defaults = {
 			steps: [],
@@ -43,13 +46,38 @@
 					lineColor: '#F44A56',
 					activeButtonBackgroundColor: '#F44A56',
 					passiveButtonBackgroundColor: '#FFF',
+					activeButtonTextColor: '#FFF',
+					passiveButtonTextColor: '#000',
 					buttonTextColor: '#FFF',
 					imageChoiceBorderColor: "#F44A56",
 					imageChoiceCircleBackgroundColor: "#FFB3B8"
+				},
+				blueberry: {
+					activeIndicatorBackgroundColor: '#4068D6',
+					activeIndicatorTextColor: '#FFF',
+					questionAndAnswerTextColor: '#69181E',
+					circleColor: '#204ABD',
+					outlineColor: '#4068D6',
+					lineColor: '#4068D6',
+					activeButtonBackgroundColor: '#4068D6',
+					passiveButtonBackgroundColor: '#FFF',
+					activeButtonTextColor: '#FFF',
+					passiveButtonTextColor: '#000',
+					buttonTextColor: '#FFF',
+					imageChoiceBorderColor: "#4068D6",
+					imageChoiceCircleBackgroundColor: "#A2B5EB"
 				}
 			};
 			var apply = function($step_html, callback) {
-					var choice = colors[wizard.settings.theme];
+					var themeSetting = wizard.settings.theme;
+					var choice = colors[themeSetting];
+					if(!themeSetting) {
+						warning("You should specify a custom theme of your taste.");
+						choice = colors.pomegranate;
+					} else if(!choice) {
+						warning("Theme choice "+themeSetting+" doesn't exist in the plugin.");
+						choice = colors.pomegranate;
+					}
 
 					// Step Indicators
 					$step_html.find(".wow-wizard-step-indicator.visited .step-id").css('background-color', choice.circleColor);
@@ -144,12 +172,14 @@
 	            if (isChecked) {
 	                $button
 	                    .addClass('active')
-	                    .css('background-color', THEME.colors.activeButtonBackgroundColor);
+	                    .css('background-color', THEME.colors.activeButtonBackgroundColor)
+	                    .css('color', THEME.colors.activeButtonTextColor);
 	            }
 	            else {
 	                $button
 	                    .removeClass('active')
-	                    .css('background-color', THEME.colors.passiveButtonBackgroundColor);
+	                    .css('background-color', THEME.colors.passiveButtonBackgroundColor)
+	                    .css('color', THEME.colors.passiveButtonTextColor);
 	            }
 	        }
 
@@ -213,7 +243,6 @@
 			}
 			else if(!CONFIG.isStepTypeAllowed($step)) {
 				throw new Error("Step type is not allowed: "+$step.type);
-				return;
 			} else { // Step is validated.
 				var $step_html = _getStepHTML($step);
 
@@ -579,7 +608,6 @@
 						}
 						$answers.append($inputRow);
 					} catch(err) {
-						console.log(err);
 						throw new Error("Input array of a step type \"form\" cannot be empty.");
 					}
 					break;
