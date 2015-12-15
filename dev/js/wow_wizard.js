@@ -737,5 +737,9 @@
 				}
 			}
 		}
+		wizard.update = function() {
+			_syncStep();
+		}
+		return wizard;
 	};
 })(jQuery);
