@@ -68,6 +68,11 @@
 					imageChoiceCircleBackgroundColor: "#A2B5EB"
 				}
 			};
+			var styles = {
+				material: {
+					borderRadius: '0.2px'
+				}
+			}
 			var apply = function($step_html, callback) {
 					var themeSetting = wizard.settings.theme;
 					var choice = colors[themeSetting];
@@ -100,7 +105,11 @@
 					$step_html.find('.fancy-checkbox .button').css('background-color', choice.passiveButtonBackgroundColor);
 					$step_html.find('.fancy-checkbox .button.active').css('background-color', choice.activeButtonBackgroundColor);
 
+					// Multiple Image Choice
+					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color');
+
 					// Form Elements
+					$step_html.find('.input-col-6 .star-icon').css('color', choice.outlineColor);
 					$step_html.find('input[type=text], textarea').css('outline', 'none');
 					$step_html.find('input[type=text]:focus, textarea:focus').css({
 							'border': '2px solid '+choice.outlineColor,
@@ -118,10 +127,14 @@
 							'border': '1px solid #BBB',
 							'-webkit-box-shadow': 'none'
 						});
-					}); 
-					$step_html.find('.input-col-6 .star-icon').css('color', choice.outlineColor);
-					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color');
+					});
 
+					// Design Style
+					if(wizard.settings.style && wizard.settings.style == 'material') {
+						console.log(styles.material.borderRadius);
+						$step_html.find('input, textarea, button, #wow-wizard-next-step, .multiple-image-choice, .single-choice-button, .wow-wizard-step-indicator').css('border-radius', styles.material.borderRadius);
+					}
+					// Loader
 					$step_html.find('.loader').css('background-image', "url('"+wizard.settings.loader+"')");
 				}
 			return {
