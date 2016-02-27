@@ -1,18 +1,24 @@
 {
   "name": "WowWizard",
-	"description": "WowWizard - A form wizard for your taste",
-  	"version": "1.0.0",
-  	"dependencies": {
-    	"jquery": "2.2.*"
-	},
-	"authors": "Yiğit Özkavcı <yigitozkavci8@gmail.com>",
-	"keywords": [
-		"input",
-	    "form",
-	    "wizard"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/yigitozkavci/WowWizard.git"
-	}
+  "description": "WowWizard - A form wizard for your taste",
+  "version": "1.0.1",
+  "dependencies": {
+    "jquery": "2.2.*"
+  },
+  "authors": [
+    "Yiğit Özkavcı <yigitozkavci8@gmail.com>"
+  ],
+  "keywords": [
+    "input",
+    "form",
+    "wizard"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yigitozkavci/WowWizard.git"
+  },
+  "homepage": "https://github.com/yigitozkavci/wowwizard",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT"
 }
