@@ -18,7 +18,13 @@
     "url": "git://github.com/yigitozkavci/WowWizard.git"
   },
   "homepage": "https://github.com/yigitozkavci/wowwizard",
-  "main": "",
+  "main": [
+    "./dist/wow_wizard.css",
+    "./dist/wow_wizard.min.js"
+  ],
+  "ignore": [
+    
+  ],
   "moduleType": [],
   "license": "MIT"
 }
