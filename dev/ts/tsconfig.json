@@ -1,0 +1,15 @@
+{
+  "files": [
+		"wow_wizard.ts",
+    "jquery.d.ts",
+    "theme.ts"
+	],
+  "compilerOptions": {
+    "target": "es5",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outFile": "../js/wow.js"
+  }
+}

@@ -1,13 +1,75 @@
-(function($) {
-	$.fn.wowWizard = function(options) {
+///<reference path="jquery.d.ts" />
+///<reference path="theme.ts" />
+(function($: JQueryStatic) {
+
+	interface errorOption {
+		required?: string;
+		email?: string;
+	}
+
+	interface wizardOptions {
+		errors: {[index: string]: errorOption};
+		steps: any;
+		theme: string;
+		loader: string;
+		onNextStep: () => any;
+		onPrevStep: () => any;
+		onFinish: (data: string) => any;
+	}
+
+	$.fn.wowWizard = function(options: wizardOptions) {
 
 		'use strict'; // For increased coolness through the code.
 
-		function warning(message){
+		let pomegranate: colorSchema = {
+			activeIndicatorBackgroundColor: '#F44A56',
+			activeIndicatorTextColor: '#FFF',
+			questionAndAnswerTextColor: '#69181E',
+			circleColor: '#C23640',
+			outlineColor: '#F44A56',
+			lineColor: '#F44A56',
+			activeButtonBackgroundColor: '#F44A56',
+			passiveButtonBackgroundColor: '#FFF',
+			activeButtonTextColor: '#FFF',
+			passiveButtonTextColor: '#000',
+			buttonTextColor: '#FFF',
+			imageChoiceBorderColor: "#F44A56",
+			imageChoiceCircleBackgroundColor: "#FFB3B8",
+			textColor: "#FFF"
+		}
+
+		let blueberry: colorSchema = {
+			activeIndicatorBackgroundColor: '#4068D6',
+			activeIndicatorTextColor: '#FFF',
+			questionAndAnswerTextColor: '#69181E',
+			circleColor: '#204ABD',
+			outlineColor: '#4068D6',
+			lineColor: '#4068D6',
+			activeButtonBackgroundColor: '#4068D6',
+			passiveButtonBackgroundColor: '#FFF',
+			activeButtonTextColor: '#FFF',
+			passiveButtonTextColor: '#000',
+			buttonTextColor: '#FFF',
+			imageChoiceBorderColor: "#4068D6",
+			imageChoiceCircleBackgroundColor: "#A2B5EB",
+			textColor: "#FFF"
+		}
+
+		let material: styleSchema = {
+			borderRadius: "0.2px"
+		}
+
+		let theme = new Theme(this);
+		theme.addColorSchema('pomegranate', pomegranate);
+		theme.addColorSchema('blueberry', blueberry);
+		theme.addStyleSchema('material', material);
+
+		this.warning = function(message: string){
 		    console.error("Warning: " + message);
 		}
+
 		// Default values in which case user does not gives a custom data.
-		$.fn.wowWizard.defaults = {
+		let defaultOptions: wizardOptions = {
 			steps: [],
 			theme: 'pomegranate',
 			loader: '../../img/loader.gif',
@@ -25,212 +87,16 @@
 			},
 			onNextStep: function() {},
 			onPrevStep: function() {},
-			onFinish: function(data) {},
+			onFinish: function(data: any) {},
 		};
 
+		$.fn.wowWizard.defaults = defaultOptions;
+
 		// Wizard settings
-		var settings = $.extend({}, $.fn.wowWizard.defaults, options);
+		let settings: wizardOptions = $.extend({}, $.fn.wowWizard.defaults, options);
 		settings.errors = $.extend({}, $.fn.wowWizard.defaults.errors, options.errors);
 		this.settings = settings;
-		var wizard = this; // Global wizard variable which is going to be used in all plugin functions.
-
-		// Creates theme colors and getter/setters for them.
-		var THEME = (function() {
-      var colors = {
-        pomegranate: {
-            activeIndicatorBackgroundColor: '#F44A56',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#69181E',
-            circleColor: '#C23640',
-            outlineColor: '#F44A56',
-            lineColor: '#F44A56',
-            activeButtonBackgroundColor: '#F44A56',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#F44A56",
-            imageChoiceCircleBackgroundColor: "#FFB3B8"
-        },
-        blueberry: {
-            activeIndicatorBackgroundColor: '#4068D6',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#204097',
-            circleColor: '#204ABD',
-            outlineColor: '#4068D6',
-            lineColor: '#4068D6',
-            activeButtonBackgroundColor: '#4068D6',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#4068D6",
-            imageChoiceCircleBackgroundColor: "#A2B5EB"
-        },
-        peach: {
-            activeIndicatorBackgroundColor: '#DB764F',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#7A2851',
-            circleColor: '#7A2851',
-            outlineColor: '#DB764F',
-            lineColor: '#DB764F',
-            activeButtonBackgroundColor: '#DB764F',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#DB764F",
-            imageChoiceCircleBackgroundColor: "#9E1E5B"
-        },
-        cherry: {
-            activeIndicatorBackgroundColor: '#CF3851',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#F0738A',
-            circleColor: '#F0738A',
-            outlineColor: '#CF3851',
-            lineColor: '#CF3851',
-            activeButtonBackgroundColor: '#CF3851',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#CF3851",
-            imageChoiceCircleBackgroundColor: "#F0738A"
-        },
-        passionfruit: {
-            activeIndicatorBackgroundColor: '#872945',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#5BA300',
-            circleColor: '#5BA300',
-            outlineColor: '#872945',
-            lineColor: '#872945',
-            activeButtonBackgroundColor: '#872945',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#872945",
-            imageChoiceCircleBackgroundColor: "#5BA300"
-        },
-        coconut: {
-            activeIndicatorBackgroundColor: '#5CD6FF',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#834820',
-            circleColor: '#834820',
-            outlineColor: '#5CD6FF',
-            lineColor: '#5CD6FF',
-            activeButtonBackgroundColor: '#5CD6FF',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#5CD6FF",
-            imageChoiceCircleBackgroundColor: "#834820"
-				},
-        lime: {
-            activeIndicatorBackgroundColor: '#2ECC71',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#69181E',
-            circleColor: '#1D9A52',
-            outlineColor: '#2ECC71',
-            lineColor: '#2ECC71',
-            activeButtonBackgroundColor: '#2ECC71',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#2ECC71",
-            imageChoiceCircleBackgroundColor: "#71E0A0"
-        },
-        banana: {
-            activeIndicatorBackgroundColor: '#F1C40F',
-            activeIndicatorTextColor: '#FFF',
-            questionAndAnswerTextColor: '#69181E',
-            circleColor: '#F39C12',
-            outlineColor: '#F1C40F',
-            lineColor: '#F1C40F',
-            activeButtonBackgroundColor: '#F1C40F',
-            passiveButtonBackgroundColor: '#FFF',
-            activeButtonTextColor: '#FFF',
-            passiveButtonTextColor: '#000',
-            buttonTextColor: '#FFF',
-            imageChoiceBorderColor: "#F1C40F",
-            imageChoiceCircleBackgroundColor: "#F9DA5F"
-         }
-      };
-			var styles = {
-				material: {
-					borderRadius: '0.2px'
-				}
-			}
-			var apply = function($step_html, callback) {
-					var themeSetting = wizard.settings.theme;
-					var choice = colors[themeSetting];
-					if(!themeSetting) {
-						warning("You should specify a custom theme of your taste.");
-						choice = colors.pomegranate;
-					} else if(!choice) {
-						warning("Theme choice "+themeSetting+" doesn't exist in the plugin.");
-						choice = colors.pomegranate;
-					}
-
-					// Step Indicators
-					$step_html.find(".wow-wizard-step-indicator.visited .step-id").css('background-color', choice.circleColor);
-					$step_html.find(".wow-wizard-step-indicator").css('color', choice.activeIndicatorTextColor);
-					$step_html.find(".wow-wizard-step-indicator.visited").css('background-color', choice.activeIndicatorBackgroundColor);
-					$step_html.find(".wow-wizard-step-indicator").filter(function(index) {
-						return !$(this).hasClass('visited');
-					}).css('color', choice.textColor);
-					$step_html.find('.wow-wizard-step-indicators').css('border-bottom', '2px solid '+choice.lineColor);
-
-					// Next Step Button
-					$step_html.find('#wow-wizard-next-step, .single-choice-button').css('background-color', choice.activeButtonBackgroundColor);
-					$step_html.find('#wow-wizard-next-step, .single-choice-button').css('color', choice.buttonTextColor);
-
-					// Single Image Choice
-					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
-					$step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid '+choice.imageChoiceBorderColor);
-
-					// Multiple Choice Buttons
-					$step_html.find('.fancy-checkbox .button').css('background-color', choice.passiveButtonBackgroundColor);
-					$step_html.find('.fancy-checkbox .button.active').css('background-color', choice.activeButtonBackgroundColor);
-
-					// Multiple Image Choice
-					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color');
-
-					// Form Elements
-					$step_html.find('.input-col-6 .star-icon').css('color', choice.outlineColor);
-					$step_html.find('input[type=text], textarea').css('outline', 'none');
-					$step_html.find('input[type=text]:focus, textarea:focus').css({
-							'border': '2px solid '+choice.outlineColor,
-							'box-shadow': '0px 0px 5px 0px rgba(244,74,85,1);'
-						});
-					$step_html.find('input[type=text], input[type=email], textarea').focus(function() {
-						$(this).css({
-							'border': '1px solid '+choice.outlineColor,
-							'-webkit-box-shadow': '0px 0px 5px 0px '+choice.outlineColor,
-							'box-shadow': '0px 0px 5px 0px '+choice.outlineColor
-						});
-					});
-					$step_html.find('input[type=text], input[type=email], textarea').blur(function() {
-						$(this).css({
-							'border': '1px solid #BBB',
-							'-webkit-box-shadow': 'none'
-						});
-					});
-
-					// Design Style
-					if(wizard.settings.style) {
-						$step_html.find('input, textarea, button, #wow-wizard-next-step, .multiple-image-choice, .single-choice-button, .wow-wizard-step-indicator, #wow-alert').css('border-radius', styles[wizard.settings.style].borderRadius);
-					}
-					// Loader
-					$step_html.find('.loader').css('background-image', "url('"+wizard.settings.loader+"')");
-				}
-			return {
-				apply: apply,
-				colors: colors[wizard.settings.theme]
-			};
-		})();
+		let wizard = this; // Global wizard variable which is going to be used in all plugin functions.
 
 		// Wizard configuration consisting of constants and private methods.
 		var CONFIG = (function() {
@@ -239,10 +105,10 @@
 				'allowedStepTypes': ['single_choice', 'form', 'multiple_choice', 'multiple_image_choice', 'textarea']
 			};
 			return {
-				shouldHaveNextButton: function($step) {
+				shouldHaveNextButton: function($step: any) {
 					return privateFields.shouldHaveNextButton.indexOf($step.type) != -1;
 				},
-				isStepTypeAllowed: function($step) {
+				isStepTypeAllowed: function($step: any) {
 					return privateFields.allowedStepTypes.indexOf($step.type) != -1;
 				},
 				debug: false
@@ -250,16 +116,16 @@
 		})();
 
 		var CheckboxBeautifier = (function() {
-			settings = {
-          on: {
-              icon: 'glyphicon glyphicon-check'
-          },
-          off: {
-              icon: 'glyphicon glyphicon-unchecked'
-          }
-      };
-			// Actions
-	        function _updateDisplay($button, $checkbox) {
+			let settings: any = {
+                on: {
+                    icon: 'glyphicon glyphicon-check'
+                },
+                off: {
+                    icon: 'glyphicon glyphicon-unchecked'
+                }
+            };
+					// Actions
+	        function _updateDisplay($button: any, $checkbox: any) {
 	            var isChecked = $checkbox.is(':checked');
 
 	            // Set the button's state
@@ -274,19 +140,19 @@
 	            if (isChecked) {
 	                $button
 	                    .addClass('active')
-	                    .css('background-color', THEME.colors.activeButtonBackgroundColor)
-	                    .css('color', THEME.colors.activeButtonTextColor);
+	                    .css('background-color', theme.getSelectedSchema().activeButtonBackgroundColor)
+	                    .css('color', theme.getSelectedSchema().activeButtonTextColor);
 	            }
 	            else {
 	                $button
 	                    .removeClass('active')
-	                    .css('background-color', THEME.colors.passiveButtonBackgroundColor)
-	                    .css('color', THEME.colors.passiveButtonTextColor);
+	                    .css('background-color', theme.getSelectedSchema().passiveButtonBackgroundColor)
+	                    .css('color', theme.getSelectedSchema().passiveButtonTextColor);
 	            }
 	        }
 
 	        // Initialization
-	        function _init($button, $checkbox) {
+	        function _init($button: any, $checkbox: any) {
 
 	            _updateDisplay($button, $checkbox);
 
@@ -320,18 +186,19 @@
 				update: function() {
 					sync();
 				},
-				selectButton: function($button) {
+				selectButton: function($button: any) {
 					sync();
 					$button.triggerHandler('click');
 				}
 			};
 		})();
+
 		// Global current step and max-reached step trackers.
 		var currentStep = 0;
 		var passedStepTracker = 0;
 
 		// Starting by syncing the step.
-		_syncStep(this);
+		_syncStep();
 
 		// Synchronizes the step. Parses the html, creates the event handlers,
 		// looks if user has answered this step and if so, uses those answers again.
@@ -350,7 +217,7 @@
 
 				wizard.html($step_html).find('.wow-wizard-content').css('opacity', '0');
 				_prepareEventHandlers($step, $step_html);
-				THEME.apply($step_html);
+				theme.apply($step_html);
 
 				var loadingTime = $step.type == 'multiple_image_choice' ? 1000 : 300;
 				setTimeout(function() {
@@ -368,7 +235,7 @@
 
 		// If the step is dependent, gets in the "steps" array of it and
 		// pulls the step that needs to be triggered.
-		function _getDependentStep($step) {
+		function _getDependentStep($step: any) {
 			for(var i = 0; i < $step.steps.length; i++) {
 				var step_steps = $step.steps[i];
 				var $trigger_step = wizard.settings.steps[step_steps.triggerStep];
@@ -379,11 +246,11 @@
 		}
 
 		// Prepares the click events on the document.
-		function _prepareEventHandlers($step, $step_html) {
+		function _prepareEventHandlers($step: any, $step_html: any) {
 
 			// Step indicator buttons click trigger
 			var $step_buttons = $step_html.find(".wow-wizard-step-indicator");
-			$step_buttons.each(function(index) {
+			$step_buttons.each(function(index: any) {
 				var step_id = $(this).data("step");
 				if(passedStepTracker > step_id) {
 					$(this).find(".step-id").html('<div class="check"></div>');
@@ -413,7 +280,7 @@
 
 			// Binding ENTER key press event if this step is suitable.
 			if($step.type == 'form') {
-				$(wizard).bind('keypress', function(e) {
+				$(wizard).bind('keypress', function(e: any) {
 					var code = e.keyCode || e.which;
 					if(code == 13) { //Enter keycode
 						_nextStep();
@@ -424,9 +291,9 @@
 			// Single image choice handler.
 			if($step.type == 'multiple_image_choice') {
 				var $multiple_image_choices = wizard.find('.multiple-image-choice');
-				$multiple_image_choices.each(function(index) {
+				$multiple_image_choices.each(function(index: any) {
 					var $multiple_image_choice = $(this);
-					$multiple_image_choice.isAvailable = true;
+					$multiple_image_choice.prop('isAvailable', true);
 					$multiple_image_choice.click(function() {
 						if($multiple_image_choice.data('selected')) {
 							_unSelectElement('multiple_image_choice', $multiple_image_choice);
@@ -453,22 +320,23 @@
 			// Checking if this is the last scene of the wizard.
 			if(++currentStep >= wizard.settings.steps.length) {
 				currentStep--;
-				_finalStep(wizard);
+				_finalStep();
 			} else {
 				// There is no problem, passing to the next step.
 				if(currentStep > passedStepTracker)
 					passedStepTracker++;
-				_syncStep(wizard);
+				_syncStep();
 				wizard.settings.onNextStep();
 			}
 			return true;
 		}
 
 		// Records the given step data and stores it into its relative given_answer field.
-		function _recordStepData($step) {
+		function _recordStepData($step: any) {
+			let alertMessage: string;
 			switch($step.type) {
 				case 'single_choice':
-					wizard.find(".single-choice-button").each(function(k) {
+					wizard.find(".single-choice-button").each(function() {
 						if($(this).data('selected')) {
 							answer = $(this).data('value');
 						}
@@ -477,8 +345,7 @@
 					if(CONFIG.debug) console.log($step.given_answer);
 					return true;
 				case 'multiple_choice':
-					var answers = [];
-					var alertMessage;
+					var answers: any[] = [];
 
 					wizard.find(".multiple-choice-choice").each(function() {
 						if($(this).hasClass('active')) {
@@ -498,9 +365,8 @@
 					var answers = [];
 
 					var stepFailed = false;
-					var alertMessage;
 
-					inputs.each(function(index) {
+					inputs.each(function(index: any) {
 						if($(this).val() != "") {
 
 							answers[index] = $(this).val();
@@ -528,7 +394,7 @@
 					var answers = [];
 
 					var $konut_tipi_choices = wizard.find(".multiple-image-choice");
-					$konut_tipi_choices.each(function(index) {
+					$konut_tipi_choices.each(function() {
 						if($(this).data('selected')) {
 							answers.push($(this).data('slug'));
 						}
@@ -554,7 +420,7 @@
 		}
 
 		// Goes to the step of which reference is given as a parameter.
-		function _goToStep(stepIndicator) {
+		function _goToStep(stepIndicator: any) {
 			var destinationStep = stepIndicator.data("step");
 
 			// Checking if this is the first scene of the wizard.
@@ -564,13 +430,13 @@
 
 			var $step = wizard.settings.steps[destinationStep];
 			currentStep = destinationStep;
-			_syncStep(wizard);
+			_syncStep();
 
 			wizard.settings.onPrevStep();
 		}
 
 		// Takes the action when a step is failed.
-		function _stepFailed($step, alertMessage) {
+		function _stepFailed($step: any, alertMessage: string) {
 			var $alert_area = wizard.find("#wow-alert");
 			$alert_area.html(alertMessage);
 			$alert_area.fadeIn(300);
@@ -581,18 +447,18 @@
 		}
 
 		// Checks if user already answered this step. If so, puts values again.
-		function _reuseOldInput($step) {
+		function _reuseOldInput($step: any) {
 			if($step.given_answer) {
 				switch($step.type) {
 					case 'single_choice':
-						$(".single-choice-button").each(function(k) {
+						$(".single-choice-button").each(function() {
 							if($step.given_answer == $(this).data('value')) {
 								$(this).find('i').fadeIn(200);
 							}
 						});
 						break;
 					case 'multiple_choice':
-						$(".fancy-checkbox").each(function(k) {
+						$(".fancy-checkbox").each(function() {
 							var $button = $(this).find("button");
 							if($step.given_answer.indexOf($button.data('value')) != -1) {
 								CheckboxBeautifier.selectButton($button);
@@ -600,7 +466,7 @@
 						});
 						break;
 					case 'form':
-						$("input").each(function(index) {
+						$("input").each(function(index: any) {
 							if($step.given_answer[index]) {
 								$(this).val($step.given_answer[index]);
 							}
@@ -608,10 +474,10 @@
 						break;
 					case 'multiple_image_choice':
 						var $konut_choices = wizard.find('.multiple-image-choice');
-						$konut_choices.each(function(index) {
+						$konut_choices.each(function(index: any) {
 							if($step.given_answer.indexOf($(this).data('slug')) != -1) {
 								var $temp = $(this);
-								$temp.isAvailable = true;
+								$temp.prop('isAvailable', true);
 								_selectElement('multiple_image_choice', $temp);
 							}
 						});
@@ -630,10 +496,10 @@
 			wizard.html(_renderLastStep());
 
 			// Preparing the eventual data.
-			var data = {};
-			$.each(wizard.settings.steps, function(k, step) {
-				var answer = step.given_answer;
-				var step_name = step.name;
+			var data: any = {};
+			$.each(wizard.settings.steps, function(k: any, step: any) {
+				var answer: any = step.given_answer;
+				var step_name: any = step.name;
 				if(step.isDependent) {
 					for(var i = 0; i < step.steps.length; i++) {
 						var substep = step.steps[i];
@@ -652,13 +518,13 @@
 		}
 
 		// Creates the HTML document from the step information given to the plugin instance.
-		function _getStepHTML($step) {
+		function _getStepHTML($step: any) {
 			var $parsed_step = $('<div class="wow-wizard-step" type="'+$step.type+'"></div>');
 
 			// Preparing questions and answers div according to whether note is exists or not.
 			if($step.notes) {
 				var $q_and_a = $('<div class="col-xs-9 wow-wizard-content"></div>');
-				$notes = $('<div class="col-xs-3 wow-wizard-content"></div>');
+				var $notes: any = $('<div class="col-xs-3 wow-wizard-content"></div>');
 				$notes.html($step.notes);
 				$parsed_step.append($notes);
 			} else {
@@ -675,14 +541,14 @@
 			var $answers = $('<div class="wow-wizard-step-answers"></div>');
 			switch($step.type) {
 				case 'single_choice':
-					$.each($step.answers, function(k, v) {
+					$.each($step.answers, function(k: any, v: any) {
 						$answers.append($('<div class="single-choice-button" data-name="'+$step.name+'" data-value="'+v.value+'"><i class="fa fa-check"></i>'+v.text+'</div>'));
 					});
 					break;
 				case 'multiple_choice':
 					try {
 						var $multiple_choice_choices = $('<div class="multiple-choice-choices"></div>');
-						$.each($step.answers, function(k, v) {
+						$.each($step.answers, function(k: any, v: any) {
 							var $button_checkbox = $('<span class="fancy-checkbox"></span>');
 							$button_checkbox.append($('<button type="button" data-value="'+v.value+'" class="button multiple-choice-choice" data-checked="false" style="margin-right:10px;" data-color="info">'+v.text+'</button>'));
 							$button_checkbox.append($('<input style="display:none;" type="checkbox" name="'+v.value+'">'));
@@ -768,7 +634,7 @@
 		}
 
 		// Selects the given element choice.
-		function _selectElement(type, $element) {
+		function _selectElement(type: any, $element: any) {
 			if($element.isAvailable) {
 				switch(type) {
 					case 'room_choice':
@@ -799,7 +665,7 @@
 		}
 
 		// Unselects the given room choice.
-		function _unSelectElement(type, $element) {
+		function _unSelectElement(type: any, $element: any) {
 			if($element.isAvailable) {
 				switch(type) {
 					case 'room_choice':
