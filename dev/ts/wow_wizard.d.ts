@@ -5,6 +5,7 @@ interface ErrorOption {
 interface WizardStepAnswer {
 	value: string;
 	text: string;
+	imageUrl?: string;
 }
 interface WizardStepInput {
 	type: string;
@@ -22,6 +23,11 @@ interface WizardStep {
 	triggerStep?: number;
 	triggerAnswer?: string;
 	inputs?: WizardStepInput[];
+	isDependent?: boolean;
+	steps?: WizardStep[];
+	given_answer?: string|string[];
+	errors?: ErrorOption;
+	notes?: string;
 }
 interface WizardOptions {
 	errors: {[index: string]: ErrorOption};

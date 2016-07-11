@@ -26,11 +26,10 @@
 			onPrevStep: function() {},
 			onFinish: function(data: any) {},
 		};
+
 		$.fn.wowWizard.defaults = defaultOptions;
 
-		let theme = Theme.construct(); // Just practicing singleton design pattern. It seems to fit in here.
-		theme.setWizard(this);
-
+		// For DRY purposes.
 		this.warning = function(message: string){
 		    console.error("Warning: " + message);
 		}
@@ -38,10 +37,13 @@
 		// Wizard settings
 		let settings: WizardOptions = $.extend({}, $.fn.wowWizard.defaults, options);
 		settings.errors = $.extend({}, $.fn.wowWizard.defaults.errors, options.errors);
-		this.settings = settings;
 		let wizard = this; // Global wizard variable which is going to be used in all plugin functions.
+		wizard.settings = settings;
+
+		let theme = Theme.construct(); // Just practicing singleton design pattern. It seems to fit in here.
+		theme.setWizard(wizard);
+
 		wizard.checkboxBeautifier = new CheckboxBeautifier(theme);
-		console.log(this.settings);
 
 		// Wizard configuration consisting of constants and private methods.
 		let CONFIG = (function() {
@@ -61,8 +63,8 @@
 		})();
 
 		// Global current step and max-reached step trackers.
-		var currentStep = 0;
-		var passedStepTracker = 0;
+		let currentStep = 0;
+		let passedStepTracker = 0;
 
 		// Starting by syncing the step.
 		_syncStep();
@@ -70,7 +72,7 @@
 		// Synchronizes the step. Parses the html, creates the event handlers,
 		// looks if user has answered this step and if so, uses those answers again.
 		function _syncStep() {
-			var $step = wizard.settings.steps[currentStep];
+			let $step: WizardStep = wizard.settings.steps[currentStep];
 			if($step.isDependent) {
 				$step = _getDependentStep($step);
 			}
@@ -80,13 +82,13 @@
 			else if(!CONFIG.isStepTypeAllowed($step)) {
 				throw new Error("Step type is not allowed: "+$step.type);
 			} else { // Step is validated.
-				var $step_html = _getStepHTML($step);
+				let $step_html = _getStepHTML($step);
 
 				wizard.html($step_html).find('.wow-wizard-content').css('opacity', '0');
 				_prepareEventHandlers($step, $step_html);
 				theme.apply($step_html);
 
-				var loadingTime = $step.type == 'multiple_image_choice' ? 1000 : 300;
+				let loadingTime = $step.type == 'multiple_image_choice' ? 1000 : 300;
 				setTimeout(function() {
 					wizard.find('.wow-wizard-content').animate({
 						opacity:1
@@ -102,7 +104,7 @@
 
 		// If the step is dependent, gets in the "steps" array of it and
 		// pulls the step that needs to be triggered.
-		function _getDependentStep($step: any) {
+		function _getDependentStep($step: WizardStep): WizardStep {
 			for(var i = 0; i < $step.steps.length; i++) {
 				var step_steps = $step.steps[i];
 				var $trigger_step = wizard.settings.steps[step_steps.triggerStep];
@@ -113,7 +115,7 @@
 		}
 
 		// Prepares the click events on the document.
-		function _prepareEventHandlers($step: any, $step_html: any) {
+		function _prepareEventHandlers($step: WizardStep, $step_html: JQuery) {
 
 			// Step indicator buttons click trigger
 			var $step_buttons = $step_html.find(".wow-wizard-step-indicator");
@@ -174,7 +176,7 @@
 
 		// Progresses to the next step.
 		function _nextStep() {
-			var $step = wizard.settings.steps[currentStep];
+			let $step: WizardStep = wizard.settings.steps[currentStep];
 			if($step.isDependent) {
 				$step = _getDependentStep($step);
 			}
@@ -199,8 +201,10 @@
 		}
 
 		// Records the given step data and stores it into its relative given_answer field.
-		function _recordStepData($step: any) {
+		function _recordStepData($step: WizardStep) {
 			let alertMessage: string;
+			let answer: string;
+			let answers: string[] = [];
 			switch($step.type) {
 				case 'single_choice':
 					wizard.find(".single-choice-button").each(function() {
@@ -212,7 +216,6 @@
 					if(CONFIG.debug) console.log($step.given_answer);
 					return true;
 				case 'multiple_choice':
-					var answers: any[] = [];
 
 					wizard.find(".multiple-choice-choice").each(function() {
 						if($(this).hasClass('active')) {
@@ -220,7 +223,6 @@
 						}
 					});
 					if(answers.length == 0) {
-						console.log(wizard.settings.errors.multiple_choice);
 						alertMessage = $step.errors && $step.errors.required ? $step.errors.required : wizard.settings.errors.multiple_choice.required;
 						return _stepFailed($step, alertMessage);
 					}
@@ -228,12 +230,11 @@
 					if(CONFIG.debug) console.log($step.given_answer);
 					return true;
 				case 'form':
-					var inputs = wizard.find("input");
-					var answers = [];
+					let $inputs: JQuery = wizard.find("input");
 
 					var stepFailed = false;
 
-					inputs.each(function(index: any) {
+					$inputs.each(function(index: any) {
 						if($(this).val() != "") {
 
 							answers[index] = $(this).val();
@@ -258,14 +259,14 @@
 					if(CONFIG.debug) console.log($step.given_answer);
 					return stepFailed ? _stepFailed($step, alertMessage) : true;
 				case 'multiple_image_choice':
-					var answers = [];
 
-					var $konut_tipi_choices = wizard.find(".multiple-image-choice");
+					let $konut_tipi_choices: JQuery = wizard.find(".multiple-image-choice");
 					$konut_tipi_choices.each(function() {
 						if($(this).data('selected')) {
 							answers.push($(this).data('slug'));
 						}
 					});
+
 					if(answers.length != 0) {
 						$step.given_answer = answers;
 						if(CONFIG.debug) console.log($step.given_answer);
@@ -275,19 +276,16 @@
 						return _stepFailed($step, alertMessage);
 					}
 				case 'textarea':
-					var answer = $("textarea").val() ;
-					if(answer) {
-						$step.given_answer = answer;
-					} else {
-						$step.given_answer = "";
-					}
+					answer = $("textarea").val();
+					$step.given_answer = answer;
+
 					if(CONFIG.debug) console.log($step.given_answer);
 					return true; // We are not checking answer in details section.
 			}
 		}
 
 		// Goes to the step of which reference is given as a parameter.
-		function _goToStep(stepIndicator: any) {
+		function _goToStep(stepIndicator: JQuery): void {
 			var destinationStep = stepIndicator.data("step");
 
 			// Checking if this is the first scene of the wizard.
@@ -303,18 +301,18 @@
 		}
 
 		// Takes the action when a step is failed.
-		function _stepFailed($step: any, alertMessage: string) {
+		function _stepFailed($step: WizardStep, alertMessage: string): boolean {
 			var $alert_area = wizard.find("#wow-alert");
 			$alert_area.html(alertMessage);
 			$alert_area.fadeIn(300);
-			setTimeout(function() {
+			setTimeout(() => {
 				$alert_area.fadeOut(300);
 			}, 1500);
 			return false;
 		}
 
 		// Checks if user already answered this step. If so, puts values again.
-		function _reuseOldInput($step: any) {
+		function _reuseOldInput($step: WizardStep): void {
 			if($step.given_answer) {
 				switch($step.type) {
 					case 'single_choice':
@@ -357,15 +355,15 @@
 		}
 
 		// Renders the last step and finishes the wizard with the collected data.
-		function _finalStep() {
+		function _finalStep(): void {
 
 			// Rendering the last step.
 			wizard.html(_renderLastStep());
 
 			// Preparing the eventual data.
 			var data: any = {};
-			$.each(wizard.settings.steps, function(k: any, step: any) {
-				var answer: any = step.given_answer;
+			$.each(wizard.settings.steps, function(k: any, step: WizardStep) {
+				var answer = step.given_answer;
 				var step_name: any = step.name;
 				if(step.isDependent) {
 					for(var i = 0; i < step.steps.length; i++) {
@@ -385,14 +383,14 @@
 		}
 
 		// Creates the HTML document from the step information given to the plugin instance.
-		function _getStepHTML($step: any) {
+		function _getStepHTML($step: WizardStep) {
 			let $parsed_step: JQuery = $('<div class="wow-wizard-step" type="'+$step.type+'"></div>');
 
 			// Preparing questions and answers div according to whether note is exists or not.
-			let $q_and_a: JQuery
+			let $q_and_a: JQuery;
 			if($step.notes) {
 				$q_and_a = $('<div class="col-xs-9 wow-wizard-content"></div>');
-				let $notes: JQuery = $('<div class="col-xs-3 wow-wizard-content"></div>');
+				let $notes = $('<div class="col-xs-3 wow-wizard-content"></div>');
 				$notes.html($step.notes);
 				$parsed_step.append($notes);
 			} else {
@@ -403,7 +401,7 @@
 			$parsed_step.append($('<div class="loader"></div>'));
 
 			// Preparing the question
-			let $question: JQuery = $('<div class="wow-wizard-step-question"></div>');
+			let $question = $('<div class="wow-wizard-step-question"></div>');
 			$question.append($('<h2 class="wow-wizard-step-question-title">'+$step.questionTitle+'</h2>'));
 			$step.questionDescription ? $question.append($('<p class="wow-wizard-step-question-description">'+$step.questionDescription+'</p>')) : null;
 
@@ -411,15 +409,15 @@
 			let $answers: JQuery = $('<div class="wow-wizard-step-answers"></div>');
 			switch($step.type) {
 				case 'single_choice':
-					$.each($step.answers, function(k: any, v: any) {
+					$.each($step.answers, function(_: any, v: any) {
 						$answers.append($('<div class="single-choice-button" data-name="'+$step.name+'" data-value="'+v.value+'"><i class="fa fa-check"></i>'+v.text+'</div>'));
 					});
 					break;
 				case 'multiple_choice':
 					try {
-						var $multiple_choice_choices = $('<div class="multiple-choice-choices"></div>');
-						$.each($step.answers, function(k: any, v: any) {
-							var $button_checkbox = $('<span class="fancy-checkbox"></span>');
+						let $multiple_choice_choices = $('<div class="multiple-choice-choices"></div>');
+						$.each($step.answers, function(_: any, v: any) {
+							let $button_checkbox = $('<span class="fancy-checkbox"></span>');
 							$button_checkbox.append($('<button type="button" data-value="'+v.value+'" class="button multiple-choice-choice" data-checked="false" style="margin-right:10px;" data-color="info">'+v.text+'</button>'));
 							$button_checkbox.append($('<input style="display:none;" type="checkbox" name="'+v.value+'">'));
 							$multiple_choice_choices.append($button_checkbox);
@@ -431,12 +429,12 @@
 					break;
 				case 'form':
 					try {
-						var $inputRow = $('<div class="input-row"></div>');
-						for(var i = 0; i < $step.inputs.length; i++) {
-							var currInput = $step.inputs[i];
-							var $input = $('<input class="pull-left" name="'+currInput.name+'" type="'+currInput.type+'">');
+						let $inputRow = $('<div class="input-row"></div>');
+						for(let i = 0; i < $step.inputs.length; i++) {
+							let currInput = $step.inputs[i];
+							let $input = $('<input class="pull-left" name="'+currInput.name+'" type="'+currInput.type+'">');
 							currInput.placeholder ? $input.attr('placeholder', currInput.placeholder) : null;
-							var $inputCol6 = $('<div class="input-col-6"></div>');
+							let $inputCol6 = $('<div class="input-col-6"></div>');
 							$inputCol6.append($input);
 							if(currInput.required) {
 								$inputCol6.prepend($('<div class="star-icon">*</div>'));

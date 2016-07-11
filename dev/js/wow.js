@@ -244,17 +244,16 @@ var CheckboxBeautifier = (function () {
             onFinish: function (data) { },
         };
         $.fn.wowWizard.defaults = defaultOptions;
-        var theme = Theme.construct();
-        theme.setWizard(this);
         this.warning = function (message) {
             console.error("Warning: " + message);
         };
         var settings = $.extend({}, $.fn.wowWizard.defaults, options);
         settings.errors = $.extend({}, $.fn.wowWizard.defaults.errors, options.errors);
-        this.settings = settings;
         var wizard = this;
+        wizard.settings = settings;
+        var theme = Theme.construct();
+        theme.setWizard(wizard);
         wizard.checkboxBeautifier = new CheckboxBeautifier(theme);
-        console.log(this.settings);
         var CONFIG = (function () {
             var privateFields = {
                 'shouldHaveNextButton': ['form', 'multiple_choice', 'multiple_image_choice', 'textarea'],
@@ -380,6 +379,8 @@ var CheckboxBeautifier = (function () {
         }
         function _recordStepData($step) {
             var alertMessage;
+            var answer;
+            var answers = [];
             switch ($step.type) {
                 case 'single_choice':
                     wizard.find(".single-choice-button").each(function () {
@@ -392,14 +393,12 @@ var CheckboxBeautifier = (function () {
                         console.log($step.given_answer);
                     return true;
                 case 'multiple_choice':
-                    var answers = [];
                     wizard.find(".multiple-choice-choice").each(function () {
                         if ($(this).hasClass('active')) {
                             answers.push($(this).data('value'));
                         }
                     });
                     if (answers.length == 0) {
-                        console.log(wizard.settings.errors.multiple_choice);
                         alertMessage = $step.errors && $step.errors.required ? $step.errors.required : wizard.settings.errors.multiple_choice.required;
                         return _stepFailed($step, alertMessage);
                     }
@@ -408,10 +407,9 @@ var CheckboxBeautifier = (function () {
                         console.log($step.given_answer);
                     return true;
                 case 'form':
-                    var inputs = wizard.find("input");
-                    var answers = [];
+                    var $inputs = wizard.find("input");
                     var stepFailed = false;
-                    inputs.each(function (index) {
+                    $inputs.each(function (index) {
                         if ($(this).val() != "") {
                             answers[index] = $(this).val();
                         }
@@ -436,7 +434,6 @@ var CheckboxBeautifier = (function () {
                         console.log($step.given_answer);
                     return stepFailed ? _stepFailed($step, alertMessage) : true;
                 case 'multiple_image_choice':
-                    var answers = [];
                     var $konut_tipi_choices = wizard.find(".multiple-image-choice");
                     $konut_tipi_choices.each(function () {
                         if ($(this).data('selected')) {
@@ -454,13 +451,8 @@ var CheckboxBeautifier = (function () {
                         return _stepFailed($step, alertMessage);
                     }
                 case 'textarea':
-                    var answer = $("textarea").val();
-                    if (answer) {
-                        $step.given_answer = answer;
-                    }
-                    else {
-                        $step.given_answer = "";
-                    }
+                    answer = $("textarea").val();
+                    $step.given_answer = answer;
                     if (CONFIG.debug)
                         console.log($step.given_answer);
                     return true;
@@ -566,20 +558,20 @@ var CheckboxBeautifier = (function () {
             var $answers = $('<div class="wow-wizard-step-answers"></div>');
             switch ($step.type) {
                 case 'single_choice':
-                    $.each($step.answers, function (k, v) {
+                    $.each($step.answers, function (_, v) {
                         $answers.append($('<div class="single-choice-button" data-name="' + $step.name + '" data-value="' + v.value + '"><i class="fa fa-check"></i>' + v.text + '</div>'));
                     });
                     break;
                 case 'multiple_choice':
                     try {
-                        var $multiple_choice_choices = $('<div class="multiple-choice-choices"></div>');
-                        $.each($step.answers, function (k, v) {
+                        var $multiple_choice_choices_1 = $('<div class="multiple-choice-choices"></div>');
+                        $.each($step.answers, function (_, v) {
                             var $button_checkbox = $('<span class="fancy-checkbox"></span>');
                             $button_checkbox.append($('<button type="button" data-value="' + v.value + '" class="button multiple-choice-choice" data-checked="false" style="margin-right:10px;" data-color="info">' + v.text + '</button>'));
                             $button_checkbox.append($('<input style="display:none;" type="checkbox" name="' + v.value + '">'));
-                            $multiple_choice_choices.append($button_checkbox);
+                            $multiple_choice_choices_1.append($button_checkbox);
                         });
-                        $answers.append($multiple_choice_choices);
+                        $answers.append($multiple_choice_choices_1);
                     }
                     catch (err) {
                         console.log(err);
@@ -588,8 +580,8 @@ var CheckboxBeautifier = (function () {
                 case 'form':
                     try {
                         var $inputRow = $('<div class="input-row"></div>');
-                        for (var i = 0; i < $step.inputs.length; i++) {
-                            var currInput = $step.inputs[i];
+                        for (var i_1 = 0; i_1 < $step.inputs.length; i_1++) {
+                            var currInput = $step.inputs[i_1];
                             var $input = $('<input class="pull-left" name="' + currInput.name + '" type="' + currInput.type + '">');
                             currInput.placeholder ? $input.attr('placeholder', currInput.placeholder) : null;
                             var $inputCol6 = $('<div class="input-col-6"></div>');
