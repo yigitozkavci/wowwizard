@@ -1,75 +1,12 @@
 ///<reference path="jquery.d.ts" />
+///<reference path="wow_wizard.d.ts" />
 ///<reference path="theme.ts" />
+///<reference path="checkbox_beautifier.ts" />
+
 (function($: JQueryStatic) {
-
-	interface errorOption {
-		required?: string;
-		email?: string;
-	}
-
-	interface wizardOptions {
-		errors: {[index: string]: errorOption};
-		steps: any;
-		theme: string;
-		loader: string;
-		onNextStep: () => any;
-		onPrevStep: () => any;
-		onFinish: (data: string) => any;
-	}
-
-	$.fn.wowWizard = function(options: wizardOptions) {
-
-		'use strict'; // For increased coolness through the code.
-
-		let pomegranate: colorSchema = {
-			activeIndicatorBackgroundColor: '#F44A56',
-			activeIndicatorTextColor: '#FFF',
-			questionAndAnswerTextColor: '#69181E',
-			circleColor: '#C23640',
-			outlineColor: '#F44A56',
-			lineColor: '#F44A56',
-			activeButtonBackgroundColor: '#F44A56',
-			passiveButtonBackgroundColor: '#FFF',
-			activeButtonTextColor: '#FFF',
-			passiveButtonTextColor: '#000',
-			buttonTextColor: '#FFF',
-			imageChoiceBorderColor: "#F44A56",
-			imageChoiceCircleBackgroundColor: "#FFB3B8",
-			textColor: "#FFF"
-		}
-
-		let blueberry: colorSchema = {
-			activeIndicatorBackgroundColor: '#4068D6',
-			activeIndicatorTextColor: '#FFF',
-			questionAndAnswerTextColor: '#69181E',
-			circleColor: '#204ABD',
-			outlineColor: '#4068D6',
-			lineColor: '#4068D6',
-			activeButtonBackgroundColor: '#4068D6',
-			passiveButtonBackgroundColor: '#FFF',
-			activeButtonTextColor: '#FFF',
-			passiveButtonTextColor: '#000',
-			buttonTextColor: '#FFF',
-			imageChoiceBorderColor: "#4068D6",
-			imageChoiceCircleBackgroundColor: "#A2B5EB",
-			textColor: "#FFF"
-		}
-
-		let material: styleSchema = {
-			borderRadius: "0.2px"
-		}
-
-		let theme = new Theme(this);
-		theme.addColorSchema('pomegranate', pomegranate);
-		theme.addColorSchema('blueberry', blueberry);
-		theme.addStyleSchema('material', material);
-
-		this.warning = function(message: string){
-		    console.error("Warning: " + message);
-		}
-
+	$.fn.wowWizard = function(options: WizardOptions) {
 		// Default values in which case user does not gives a custom data.
-		let defaultOptions: wizardOptions = {
+		let defaultOptions: WizardOptions = {
 			steps: [],
 			theme: 'pomegranate',
 			loader: '../../img/loader.gif',
@@ -89,17 +26,25 @@
 			onPrevStep: function() {},
 			onFinish: function(data: any) {},
 		};
-
 		$.fn.wowWizard.defaults = defaultOptions;
 
+		let theme = Theme.construct(); // Just practicing singleton design pattern. It seems to fit in here.
+		theme.setWizard(this);
+
+		this.warning = function(message: string){
+		    console.error("Warning: " + message);
+		}
+
 		// Wizard settings
-		let settings: wizardOptions = $.extend({}, $.fn.wowWizard.defaults, options);
+		let settings: WizardOptions = $.extend({}, $.fn.wowWizard.defaults, options);
 		settings.errors = $.extend({}, $.fn.wowWizard.defaults.errors, options.errors);
 		this.settings = settings;
 		let wizard = this; // Global wizard variable which is going to be used in all plugin functions.
+		wizard.checkboxBeautifier = new CheckboxBeautifier(theme);
+		console.log(this.settings);
 
 		// Wizard configuration consisting of constants and private methods.
-		var CONFIG = (function() {
+		let CONFIG = (function() {
 			var privateFields = {
 				'shouldHaveNextButton': ['form', 'multiple_choice', 'multiple_image_choice', 'textarea'],
 				'allowedStepTypes': ['single_choice', 'form', 'multiple_choice', 'multiple_image_choice', 'textarea']
@@ -112,84 +57,6 @@
 					return privateFields.allowedStepTypes.indexOf($step.type) != -1;
 				},
 				debug: false
-			};
-		})();
-
-		var CheckboxBeautifier = (function() {
-			let settings: any = {
-                on: {
-                    icon: 'glyphicon glyphicon-check'
-                },
-                off: {
-                    icon: 'glyphicon glyphicon-unchecked'
-                }
-            };
-					// Actions
-	        function _updateDisplay($button: any, $checkbox: any) {
-	            var isChecked = $checkbox.is(':checked');
-
-	            // Set the button's state
-	            $button.data('state', (isChecked) ? "on" : "off");
-
-	            // Set the button's icon
-	            $button.find('.state-icon')
-	                .removeClass()
-	                .addClass('state-icon ' + settings[$button.data('state')].icon);
-
-	            // Update the button's color
-	            if (isChecked) {
-	                $button
-	                    .addClass('active')
-	                    .css('background-color', theme.getSelectedSchema().activeButtonBackgroundColor)
-	                    .css('color', theme.getSelectedSchema().activeButtonTextColor);
-	            }
-	            else {
-	                $button
-	                    .removeClass('active')
-	                    .css('background-color', theme.getSelectedSchema().passiveButtonBackgroundColor)
-	                    .css('color', theme.getSelectedSchema().passiveButtonTextColor);
-	            }
-	        }
-
-	        // Initialization
-	        function _init($button: any, $checkbox: any) {
-
-	            _updateDisplay($button, $checkbox);
-
-	            // Inject the icon if applicable
-	            if ($button.find('.state-icon').length == 0) {
-	                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
-	            }
-	        }
-	        function sync() {
-	        	$('.fancy-checkbox').each(function() {
-					var $widget = $(this),
-						$button = $widget.find('button'),
-			            $checkbox = $widget.find('input:checkbox'),
-			            color = $button.data('color');
-
-
-			        // Event Handlers
-			        $button.unbind().on('click', function () {
-
-			            $checkbox.prop('checked', !$checkbox.is(':checked'));
-			            $checkbox.triggerHandler('change');
-			            _updateDisplay($button, $checkbox);
-			        });
-			        $checkbox.on('change', function () {
-			            _updateDisplay($button, $checkbox);
-			        });
-			        _init($button, $checkbox);
-				});
-	        }
-			return {
-				update: function() {
-					sync();
-				},
-				selectButton: function($button: any) {
-					sync();
-					$button.triggerHandler('click');
-				}
 			};
 		})();
 
@@ -229,7 +96,7 @@
 
 				_reuseOldInput($step);
 			}
-				CheckboxBeautifier.update();
+				wizard.checkboxBeautifier.update();
 
 		}
 
@@ -293,7 +160,7 @@
 				var $multiple_image_choices = wizard.find('.multiple-image-choice');
 				$multiple_image_choices.each(function(index: any) {
 					var $multiple_image_choice = $(this);
-					$multiple_image_choice.prop('isAvailable', true);
+					$multiple_image_choice.data('isAvailable', true);
 					$multiple_image_choice.click(function() {
 						if($multiple_image_choice.data('selected')) {
 							_unSelectElement('multiple_image_choice', $multiple_image_choice);
@@ -461,7 +328,7 @@
 						$(".fancy-checkbox").each(function() {
 							var $button = $(this).find("button");
 							if($step.given_answer.indexOf($button.data('value')) != -1) {
-								CheckboxBeautifier.selectButton($button);
+								wizard.checkboxBeautifier.selectButton($button);
 							}
 						});
 						break;
@@ -477,7 +344,7 @@
 						$konut_choices.each(function(index: any) {
 							if($step.given_answer.indexOf($(this).data('slug')) != -1) {
 								var $temp = $(this);
-								$temp.prop('isAvailable', true);
+								$temp.data('isAvailable', true);
 								_selectElement('multiple_image_choice', $temp);
 							}
 						});
@@ -519,26 +386,29 @@
 
 		// Creates the HTML document from the step information given to the plugin instance.
 		function _getStepHTML($step: any) {
-			var $parsed_step = $('<div class="wow-wizard-step" type="'+$step.type+'"></div>');
+			let $parsed_step: JQuery = $('<div class="wow-wizard-step" type="'+$step.type+'"></div>');
 
 			// Preparing questions and answers div according to whether note is exists or not.
+			let $q_and_a: JQuery
 			if($step.notes) {
-				var $q_and_a = $('<div class="col-xs-9 wow-wizard-content"></div>');
-				var $notes: any = $('<div class="col-xs-3 wow-wizard-content"></div>');
+				$q_and_a = $('<div class="col-xs-9 wow-wizard-content"></div>');
+				let $notes: JQuery = $('<div class="col-xs-3 wow-wizard-content"></div>');
 				$notes.html($step.notes);
 				$parsed_step.append($notes);
 			} else {
-				var $q_and_a = $('<div class="col-xs-12 wow-wizard-content"></div>');
+				$q_and_a = $('<div class="col-xs-12 wow-wizard-content"></div>');
 			}
+
 			// Adding the loader
 			$parsed_step.append($('<div class="loader"></div>'));
+
 			// Preparing the question
-			var $question = $('<div class="wow-wizard-step-question"></div>');
+			let $question: JQuery = $('<div class="wow-wizard-step-question"></div>');
 			$question.append($('<h2 class="wow-wizard-step-question-title">'+$step.questionTitle+'</h2>'));
 			$step.questionDescription ? $question.append($('<p class="wow-wizard-step-question-description">'+$step.questionDescription+'</p>')) : null;
 
 			// Preparing answers
-			var $answers = $('<div class="wow-wizard-step-answers"></div>');
+			let $answers: JQuery = $('<div class="wow-wizard-step-answers"></div>');
 			switch($step.type) {
 				case 'single_choice':
 					$.each($step.answers, function(k: any, v: any) {
@@ -581,9 +451,9 @@
 					break;
 				case 'multiple_image_choice':
 					try {
-						var $choices = $('<div class="multiple-image-choices"></div>');
+						let $choices = $('<div class="multiple-image-choices"></div>');
 						for(var i = 0; i < $step.answers.length; i++) {
-							var choice_info = $step.answers[i];
+							let choice_info = $step.answers[i];
 							var $choice = $('<div class="multiple-image-choice" data-slug="'+choice_info.value+'"></div>');
 							var $choice_image = $('<div class="multiple-image-container" style="background-image:url(\''+choice_info.imageUrl+'\')"/>');
 							var $choice_text = $('<p>'+choice_info.text+'</p>');
@@ -629,26 +499,26 @@
 
 		// Renders the last(success) step of the wizard.
 		function _renderLastStep() {
-			var $parsed_step = $('<div class="wow-wizard-last-step"><h1>Thanks for using WowWizard!</h1><p>We\'ve got all your information. Will reach you soon.</p><a href="#">RETURN HOME</a></div>');
+			let $parsed_step = $('<div class="wow-wizard-last-step"><h1>Thanks for using WowWizard!</h1><p>We\'ve got all your information. Will reach you soon.</p><a href="#">RETURN HOME</a></div>');
 			return $parsed_step;
 		}
 
 		// Selects the given element choice.
-		function _selectElement(type: any, $element: any) {
-			if($element.isAvailable) {
+		function _selectElement(type: any, $element: JQuery) {
+			if($element.data('isAvailable')) {
 				switch(type) {
 					case 'room_choice':
-						if(!$element.isCustom)
-							$element.isAvailable = false;
+						if(!$element.data('isCustom'))
+							$element.data('isAvailable', false);
 						$element.css('color', 'white');
 						$element.find("i").fadeIn(200, function() {
-							$element.isAvailable = true;
+							$element.data('isAvailable', true);
 							$element.data('selected', true);
 						});
 						$element.animate({
 							backgroundColor: '#59BAFF'
 						}, 200, null);
-						if($element.isCustom) {
+						if($element.data('isCustom')) {
 							var $inputs = $element.find("input");
 							$inputs.css('color', 'white');
 							$inputs.css('border-bottom', '1px solid white');
@@ -665,21 +535,21 @@
 		}
 
 		// Unselects the given room choice.
-		function _unSelectElement(type: any, $element: any) {
-			if($element.isAvailable) {
+		function _unSelectElement(type: any, $element: JQuery) {
+			if($element.data('isAvailable')) {
 				switch(type) {
 					case 'room_choice':
-						if(!$element.isCustom)
-							$element.isAvailable = false;
+						if(!$element.data('isCustom'))
+							$element.data('isAvailable', false);
 						$element.css('color', '#59BAFF');
 						$element.animate({
 							backgroundColor: 'transparent'
 						}, 200, null);
 						$element.find("i").fadeOut(200, function() {
-							$element.isAvailable = true;
+							$element.data('isAvailable', true);
 							$element.data('selected', false);
 						});
-						if($element.isCustom) {
+						if($element.data('isCustom')) {
 							$element.find("input").css('color', '#59BAFF');
 							$element.find("input").css('border-bottom', '1px solid #59BAFF');
 						}

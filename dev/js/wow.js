@@ -1,89 +1,95 @@
 var Theme = (function () {
-    function Theme(wizard) {
-        this._allowedSchemas = ['pomegranate', 'blueberry'];
-        this._allowedStyles = ['material'];
-        this._defaultSchema = 'pomegranate';
-        this._defaultStyle = 'material';
-        this._wizard = wizard;
+    function Theme() {
+        this._allowedColorSchemas = ['pomegranate', 'blueberry'];
+        this._allowedStyleSchemas = ['material'];
+        this._defaultColorSchema = 'pomegranate';
+        this._defaultStyleSchema = 'material';
         this._styles = {};
         this._colors = {};
-        this.selectSchema(this._defaultSchema);
-        this.selectStyle(this._defaultStyle);
+        this.selectColorSchema(this._defaultColorSchema);
+        this.selectStyleSchema(this._defaultStyleSchema);
+        this.addPredefinedColorAndStyles();
     }
+    Theme.construct = function () {
+        return Theme._instance;
+    };
+    Theme.prototype.setWizard = function (wizard) {
+        this._wizard = wizard;
+    };
     Theme.prototype.addColorSchema = function (name, schema) {
         this._colors[name] = schema;
     };
     Theme.prototype.addStyleSchema = function (name, schema) {
         this._styles[name] = schema;
     };
-    Theme.prototype.selectSchema = function (name) {
-        this._selectedSchema = this._colors[name];
+    Theme.prototype.selectColorSchema = function (name) {
+        this._selectedColorSchema = this._colors[name];
     };
-    Theme.prototype.selectStyle = function (name) {
-        this._selectedStyle = this._styles[name];
+    Theme.prototype.selectStyleSchema = function (name) {
+        this._selectedStyleSchema = this._styles[name];
     };
-    Theme.prototype.getSelectedSchema = function () {
-        return this._selectedSchema;
+    Theme.prototype.getSelectedColorSchema = function () {
+        return this._selectedColorSchema;
     };
-    Theme.prototype.getSelectedStyle = function () {
-        return this._selectedStyle;
+    Theme.prototype.getSelectedStyleSchema = function () {
+        return this._selectedStyleSchema;
     };
     Theme.prototype.apply = function (step_html) {
-        var selectedSchema = this._wizard.settings.theme;
-        var selectedStyle = this._wizard.settings.style;
-        if (selectedSchema) {
-            if (this._allowedSchemas.indexOf(selectedSchema) === -1) {
-                this._wizard.warning("Theme choice " + selectedSchema + " doesn't exist in the plugin.");
-                this.selectSchema(this._defaultSchema);
+        var selectedColorSchema = this._wizard.settings.theme;
+        var selectedStyleSchema = this._wizard.settings.style;
+        if (selectedColorSchema) {
+            if (this._allowedColorSchemas.indexOf(selectedColorSchema) === -1) {
+                this._wizard.warning("Theme choice " + selectedColorSchema + " doesn't exist in the plugin.");
+                this.selectColorSchema(this._defaultColorSchema);
             }
             else {
-                this.selectSchema(selectedSchema);
+                this.selectColorSchema(selectedColorSchema);
             }
         }
         else {
             this._wizard.warning("You should specify a custom theme of your taste.");
-            this.selectSchema(this._defaultSchema);
+            this.selectColorSchema(this._defaultColorSchema);
         }
-        if (selectedStyle) {
-            if (this._allowedStyles.indexOf(selectedStyle) === -1) {
-                this._wizard.warning("Style choice " + selectedStyle + " doesn't exist in the plugin.");
-                this.selectStyle(this._defaultStyle);
+        if (selectedStyleSchema) {
+            if (this._allowedStyleSchemas.indexOf(selectedStyleSchema) === -1) {
+                this._wizard.warning("Style choice " + selectedStyleSchema + " doesn't exist in the plugin.");
+                this.selectStyleSchema(this._defaultStyleSchema);
             }
             else {
-                this.selectStyle(selectedStyle);
+                this.selectStyleSchema(selectedStyleSchema);
             }
         }
         else {
             this._wizard.warning("You should specify a custom style of your taste.");
-            this.selectStyle(this._defaultStyle);
+            this.selectStyleSchema(this._defaultStyleSchema);
         }
-        var choice = this.getSelectedSchema();
-        var style = this.getSelectedStyle();
-        step_html.find(".wow-wizard-step-indicator.visited .step-id").css('background-color', choice.circleColor);
-        step_html.find(".wow-wizard-step-indicator").css('color', choice.activeIndicatorTextColor);
-        step_html.find(".wow-wizard-step-indicator.visited").css('background-color', choice.activeIndicatorBackgroundColor);
+        var colorSchemaChoice = this.getSelectedColorSchema();
+        var styleSchemaChoice = this.getSelectedStyleSchema();
+        step_html.find(".wow-wizard-step-indicator.visited .step-id").css('background-color', colorSchemaChoice.circleColor);
+        step_html.find(".wow-wizard-step-indicator").css('color', colorSchemaChoice.activeIndicatorTextColor);
+        step_html.find(".wow-wizard-step-indicator.visited").css('background-color', colorSchemaChoice.activeIndicatorBackgroundColor);
         step_html.find(".wow-wizard-step-indicator").filter(function (index) {
             return !$(this).hasClass('visited');
-        }).css('color', choice.textColor);
-        step_html.find('.wow-wizard-step-indicators').css('border-bottom', '2px solid ' + choice.lineColor);
-        step_html.find('#wow-wizard-next-step, .single-choice-button').css('background-color', choice.activeButtonBackgroundColor);
-        step_html.find('#wow-wizard-next-step, .single-choice-button').css('color', choice.buttonTextColor);
-        step_html.find('.multiple-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
-        step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid ' + choice.imageChoiceBorderColor);
-        step_html.find('.fancy-checkbox .button').css('background-color', choice.passiveButtonBackgroundColor);
-        step_html.find('.fancy-checkbox .button.active').css('background-color', choice.activeButtonBackgroundColor);
+        }).css('color', colorSchemaChoice.textColor);
+        step_html.find('.wow-wizard-step-indicators').css('border-bottom', '2px solid ' + colorSchemaChoice.lineColor);
+        step_html.find('#wow-wizard-next-step, .single-choice-button').css('background-color', colorSchemaChoice.activeButtonBackgroundColor);
+        step_html.find('#wow-wizard-next-step, .single-choice-button').css('color', colorSchemaChoice.buttonTextColor);
+        step_html.find('.multiple-image-choice .circle-select .background').css('background-color', colorSchemaChoice.imageChoiceCircleBackgroundColor);
+        step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid ' + colorSchemaChoice.imageChoiceBorderColor);
+        step_html.find('.fancy-checkbox .button').css('background-color', colorSchemaChoice.passiveButtonBackgroundColor);
+        step_html.find('.fancy-checkbox .button.active').css('background-color', colorSchemaChoice.activeButtonBackgroundColor);
         step_html.find('.multiple-image-choice .circle-select .background').css('background-color');
-        step_html.find('.input-col-6 .star-icon').css('color', choice.outlineColor);
+        step_html.find('.input-col-6 .star-icon').css('color', colorSchemaChoice.outlineColor);
         step_html.find('input[type=text], textarea').css('outline', 'none');
         step_html.find('input[type=text]:focus, textarea:focus').css({
-            'border': '2px solid ' + choice.outlineColor,
+            'border': '2px solid ' + colorSchemaChoice.outlineColor,
             'box-shadow': '0px 0px 5px 0px rgba(244,74,85,1);'
         });
         step_html.find('input[type=text], input[type=email], textarea').focus(function () {
             $(this).css({
-                'border': '1px solid ' + choice.outlineColor,
-                '-webkit-box-shadow': '0px 0px 5px 0px ' + choice.outlineColor,
-                'box-shadow': '0px 0px 5px 0px ' + choice.outlineColor
+                'border': '1px solid ' + colorSchemaChoice.outlineColor,
+                '-webkit-box-shadow': '0px 0px 5px 0px ' + colorSchemaChoice.outlineColor,
+                'box-shadow': '0px 0px 5px 0px ' + colorSchemaChoice.outlineColor
             });
         });
         step_html.find('input[type=text], input[type=email], textarea').blur(function () {
@@ -93,15 +99,11 @@ var Theme = (function () {
             });
         });
         if (this._wizard.settings.style) {
-            step_html.find('input, textarea, button, #wow-wizard-next-step, .multiple-image-choice, .single-choice-button, .wow-wizard-step-indicator, #wow-alert').css('border-radius', this.getSelectedStyle().borderRadius);
+            step_html.find('input, textarea, button, #wow-wizard-next-step, .multiple-image-choice, .single-choice-button, .wow-wizard-step-indicator, #wow-alert').css('border-radius', this.getSelectedStyleSchema().borderRadius);
         }
         step_html.find('.loader').css('background-image', "url('" + this._wizard.settings.loader + "')");
     };
-    return Theme;
-}());
-(function ($) {
-    $.fn.wowWizard = function (options) {
-        'use strict';
+    Theme.prototype.addPredefinedColorAndStyles = function () {
         var pomegranate = {
             activeIndicatorBackgroundColor: '#F44A56',
             activeIndicatorTextColor: '#FFF',
@@ -118,6 +120,7 @@ var Theme = (function () {
             imageChoiceCircleBackgroundColor: "#FFB3B8",
             textColor: "#FFF"
         };
+        this.addColorSchema('pomegranate', pomegranate);
         var blueberry = {
             activeIndicatorBackgroundColor: '#4068D6',
             activeIndicatorTextColor: '#FFF',
@@ -134,16 +137,92 @@ var Theme = (function () {
             imageChoiceCircleBackgroundColor: "#A2B5EB",
             textColor: "#FFF"
         };
+        this.addColorSchema('blueberry', blueberry);
         var material = {
             borderRadius: "0.2px"
         };
-        var theme = new Theme(this);
-        theme.addColorSchema('pomegranate', pomegranate);
-        theme.addColorSchema('blueberry', blueberry);
-        theme.addStyleSchema('material', material);
-        this.warning = function (message) {
-            console.error("Warning: " + message);
+        this.addStyleSchema('material', material);
+    };
+    Theme._instance = new Theme();
+    return Theme;
+}());
+var CheckboxBeautifier = (function () {
+    function CheckboxBeautifier(theme) {
+        this._settings = {
+            on: {
+                icon: 'glyphicon glyphicon-check'
+            },
+            off: {
+                icon: 'glyphicon glyphicon-unchecked'
+            }
         };
+        this._theme = theme;
+    }
+    CheckboxBeautifier.prototype.update = function () {
+        this.sync();
+    };
+    CheckboxBeautifier.prototype.selectButton = function ($button) {
+        this.sync();
+        $button.triggerHandler('click');
+    };
+    CheckboxBeautifier.prototype._updateDisplay = function ($button, $checkbox) {
+        var isChecked = $checkbox.is(':checked');
+        if (isChecked) {
+            $button.data('state', 'on');
+            $button.find('.state-icon')
+                .removeClass()
+                .addClass('state-icon ' + this._settings.on.icon);
+        }
+        else {
+            $button.data('state', 'off');
+            $button.find('.state-icon')
+                .removeClass()
+                .addClass('state-icon ' + this._settings.off.icon);
+        }
+        if (isChecked) {
+            $button
+                .addClass('active')
+                .css('background-color', this._theme.getSelectedColorSchema().activeButtonBackgroundColor)
+                .css('color', this._theme.getSelectedColorSchema().activeButtonTextColor);
+        }
+        else {
+            $button
+                .removeClass('active')
+                .css('background-color', this._theme.getSelectedColorSchema().passiveButtonBackgroundColor)
+                .css('color', this._theme.getSelectedColorSchema().passiveButtonTextColor);
+        }
+    };
+    CheckboxBeautifier.prototype.sync = function () {
+        var _this = this;
+        var self = this;
+        $('.fancy-checkbox').each(function (index, value) {
+            var $widget = $(value), $button = $widget.find('button'), $checkbox = $widget.find('input:checkbox'), color = $button.data('color');
+            $button.unbind().on('click', function () {
+                $checkbox.data('checked', !$checkbox.is(':checked'));
+                $checkbox.prop('checked', !$checkbox.is(':checked'));
+                _this._updateDisplay($button, $checkbox);
+            });
+            $checkbox.on('change', function () {
+                _this._updateDisplay($button, $checkbox);
+            });
+            _this._updateDisplay($button, $checkbox);
+            var iconClass;
+            if ($button.data('state') === 'on') {
+                iconClass = _this._settings.on.icon;
+            }
+            else {
+                iconClass = _this._settings.off.icon;
+            }
+            if ($button.find('.state-icon').length == 0) {
+                $button.prepend('<i class="state-icon ' + iconClass + '"></i> ');
+            }
+        });
+    };
+    return CheckboxBeautifier;
+}());
+;
+(function ($) {
+    $.fn.wowWizard = function (options) {
         var defaultOptions = {
             steps: [],
             theme: 'pomegranate',
@@ -165,10 +244,17 @@ var Theme = (function () {
             onFinish: function (data) { },
         };
         $.fn.wowWizard.defaults = defaultOptions;
+        var theme = Theme.construct();
+        theme.setWizard(this);
+        this.warning = function (message) {
+            console.error("Warning: " + message);
+        };
         var settings = $.extend({}, $.fn.wowWizard.defaults, options);
         settings.errors = $.extend({}, $.fn.wowWizard.defaults.errors, options.errors);
         this.settings = settings;
         var wizard = this;
+        wizard.checkboxBeautifier = new CheckboxBeautifier(theme);
+        console.log(this.settings);
         var CONFIG = (function () {
             var privateFields = {
                 'shouldHaveNextButton': ['form', 'multiple_choice', 'multiple_image_choice', 'textarea'],
@@ -182,64 +268,6 @@ var Theme = (function () {
                     return privateFields.allowedStepTypes.indexOf($step.type) != -1;
                 },
                 debug: false
-            };
-        })();
-        var CheckboxBeautifier = (function () {
-            var settings = {
-                on: {
-                    icon: 'glyphicon glyphicon-check'
-                },
-                off: {
-                    icon: 'glyphicon glyphicon-unchecked'
-                }
-            };
-            function _updateDisplay($button, $checkbox) {
-                var isChecked = $checkbox.is(':checked');
-                $button.data('state', (isChecked) ? "on" : "off");
-                $button.find('.state-icon')
-                    .removeClass()
-                    .addClass('state-icon ' + settings[$button.data('state')].icon);
-                if (isChecked) {
-                    $button
-                        .addClass('active')
-                        .css('background-color', theme.getSelectedSchema().activeButtonBackgroundColor)
-                        .css('color', theme.getSelectedSchema().activeButtonTextColor);
-                }
-                else {
-                    $button
-                        .removeClass('active')
-                        .css('background-color', theme.getSelectedSchema().passiveButtonBackgroundColor)
-                        .css('color', theme.getSelectedSchema().passiveButtonTextColor);
-                }
-            }
-            function _init($button, $checkbox) {
-                _updateDisplay($button, $checkbox);
-                if ($button.find('.state-icon').length == 0) {
-                    $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
-                }
-            }
-            function sync() {
-                $('.fancy-checkbox').each(function () {
-                    var $widget = $(this), $button = $widget.find('button'), $checkbox = $widget.find('input:checkbox'), color = $button.data('color');
-                    $button.unbind().on('click', function () {
-                        $checkbox.prop('checked', !$checkbox.is(':checked'));
-                        $checkbox.triggerHandler('change');
-                        _updateDisplay($button, $checkbox);
-                    });
-                    $checkbox.on('change', function () {
-                        _updateDisplay($button, $checkbox);
-                    });
-                    _init($button, $checkbox);
-                });
-            }
-            return {
-                update: function () {
-                    sync();
-                },
-                selectButton: function ($button) {
-                    sync();
-                    $button.triggerHandler('click');
-                }
             };
         })();
         var currentStep = 0;
@@ -270,7 +298,7 @@ var Theme = (function () {
                 }, loadingTime);
                 _reuseOldInput($step);
             }
-            CheckboxBeautifier.update();
+            wizard.checkboxBeautifier.update();
         }
         function _getDependentStep($step) {
             for (var i = 0; i < $step.steps.length; i++) {
@@ -318,7 +346,7 @@ var Theme = (function () {
                 var $multiple_image_choices = wizard.find('.multiple-image-choice');
                 $multiple_image_choices.each(function (index) {
                     var $multiple_image_choice = $(this);
-                    $multiple_image_choice.prop('isAvailable', true);
+                    $multiple_image_choice.data('isAvailable', true);
                     $multiple_image_choice.click(function () {
                         if ($multiple_image_choice.data('selected')) {
                             _unSelectElement('multiple_image_choice', $multiple_image_choice);
@@ -471,7 +499,7 @@ var Theme = (function () {
                         $(".fancy-checkbox").each(function () {
                             var $button = $(this).find("button");
                             if ($step.given_answer.indexOf($button.data('value')) != -1) {
-                                CheckboxBeautifier.selectButton($button);
+                                wizard.checkboxBeautifier.selectButton($button);
                             }
                         });
                         break;
@@ -487,7 +515,7 @@ var Theme = (function () {
                         $konut_choices.each(function (index) {
                             if ($step.given_answer.indexOf($(this).data('slug')) != -1) {
                                 var $temp = $(this);
-                                $temp.prop('isAvailable', true);
+                                $temp.data('isAvailable', true);
                                 _selectElement('multiple_image_choice', $temp);
                             }
                         });
@@ -521,14 +549,15 @@ var Theme = (function () {
         }
         function _getStepHTML($step) {
             var $parsed_step = $('<div class="wow-wizard-step" type="' + $step.type + '"></div>');
+            var $q_and_a;
             if ($step.notes) {
-                var $q_and_a = $('<div class="col-xs-9 wow-wizard-content"></div>');
+                $q_and_a = $('<div class="col-xs-9 wow-wizard-content"></div>');
                 var $notes = $('<div class="col-xs-3 wow-wizard-content"></div>');
                 $notes.html($step.notes);
                 $parsed_step.append($notes);
             }
             else {
-                var $q_and_a = $('<div class="col-xs-12 wow-wizard-content"></div>');
+                $q_and_a = $('<div class="col-xs-12 wow-wizard-content"></div>');
             }
             $parsed_step.append($('<div class="loader"></div>'));
             var $question = $('<div class="wow-wizard-step-question"></div>');
@@ -621,20 +650,20 @@ var Theme = (function () {
             return $parsed_step;
         }
         function _selectElement(type, $element) {
-            if ($element.isAvailable) {
+            if ($element.data('isAvailable')) {
                 switch (type) {
                     case 'room_choice':
-                        if (!$element.isCustom)
-                            $element.isAvailable = false;
+                        if (!$element.data('isCustom'))
+                            $element.data('isAvailable', false);
                         $element.css('color', 'white');
                         $element.find("i").fadeIn(200, function () {
-                            $element.isAvailable = true;
+                            $element.data('isAvailable', true);
                             $element.data('selected', true);
                         });
                         $element.animate({
                             backgroundColor: '#59BAFF'
                         }, 200, null);
-                        if ($element.isCustom) {
+                        if ($element.data('isCustom')) {
                             var $inputs = $element.find("input");
                             $inputs.css('color', 'white');
                             $inputs.css('border-bottom', '1px solid white');
@@ -650,20 +679,20 @@ var Theme = (function () {
             }
         }
         function _unSelectElement(type, $element) {
-            if ($element.isAvailable) {
+            if ($element.data('isAvailable')) {
                 switch (type) {
                     case 'room_choice':
-                        if (!$element.isCustom)
-                            $element.isAvailable = false;
+                        if (!$element.data('isCustom'))
+                            $element.data('isAvailable', false);
                         $element.css('color', '#59BAFF');
                         $element.animate({
                             backgroundColor: 'transparent'
                         }, 200, null);
                         $element.find("i").fadeOut(200, function () {
-                            $element.isAvailable = true;
+                            $element.data('isAvailable', true);
                             $element.data('selected', false);
                         });
-                        if ($element.isCustom) {
+                        if ($element.data('isCustom')) {
                             $element.find("input").css('color', '#59BAFF');
                             $element.find("input").css('border-bottom', '1px solid #59BAFF');
                         }
