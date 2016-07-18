@@ -1,6 +1,7 @@
 {
   "files": [
 		"wow_wizard.ts",
+    "wow_wizard_class.ts",
     "jquery.d.ts",
     "theme.ts"
 	],

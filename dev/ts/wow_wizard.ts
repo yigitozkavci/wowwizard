@@ -2,7 +2,6 @@
 ///<reference path="wow_wizard.d.ts" />
 ///<reference path="theme.ts" />
 ///<reference path="checkbox_beautifier.ts" />
-
 (function($: JQueryStatic) {
 	$.fn.wowWizard = function(options: WizardOptions) {
 		// Default values in which case user does not gives a custom data.
@@ -44,7 +43,9 @@
 		theme.setWizard(wizard);
 
 		wizard.checkboxBeautifier = new CheckboxBeautifier(theme);
-
+		wizard.update = function() {
+			_syncStep();
+		}
 		// Wizard configuration consisting of constants and private methods.
 		let CONFIG = (function() {
 			var privateFields = {
@@ -71,7 +72,7 @@
 
 		// Synchronizes the step. Parses the html, creates the event handlers,
 		// looks if user has answered this step and if so, uses those answers again.
-		function _syncStep() {
+		function _syncStep(): void {
 			let $step: WizardStep = wizard.settings.steps[currentStep];
 			if($step.isDependent) {
 				$step = _getDependentStep($step);
@@ -98,8 +99,7 @@
 
 				_reuseOldInput($step);
 			}
-				wizard.checkboxBeautifier.update();
-
+			wizard.checkboxBeautifier.update();
 		}
 
 		// If the step is dependent, gets in the "steps" array of it and
@@ -561,9 +561,7 @@
 				}
 			}
 		}
-		wizard.update = function() {
-			_syncStep();
-		}
+
 		return wizard;
 	};
 })(jQuery);

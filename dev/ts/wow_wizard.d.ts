@@ -31,10 +31,10 @@ interface WizardStep {
 }
 interface WizardOptions {
 	errors: {[index: string]: ErrorOption};
-	steps: WizardStep[];
+	steps: Array<WizardStep>;
 	theme: string;
 	loader: string;
-	onNextStep: () => any;
-	onPrevStep: () => any;
-	onFinish: (data: string) => any;
+	onNextStep: () => void;
+	onPrevStep: () => void;
+	onFinish: (data: string) => void;
 }
