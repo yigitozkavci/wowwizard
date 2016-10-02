@@ -322,11 +322,11 @@
 		function _clearFutureSteps($step) {
 			var depending_steps = [];
 			for(var i = currentStep+1; i <= passedStepTracker; i++) {
-				var $step_filled = wizard.settings.steps[i];
-				if($step_filled.isDependent) {
+				var step_filled = wizard.settings.steps[i];
+				if(step_filled.isDependent) {
 					var found = false;
-					for(var j = 0; j < $step_filled.steps.length && !found; j++) {
-						if($step_filled.steps[j].triggerStep == currentStep) {
+					for(var j = 0; j < step_filled.steps.length && !found; j++) {
+						if(step_filled.steps[j].triggerStep == currentStep) {
 							depending_steps.push(i);
 							found = true;
 						}
@@ -339,7 +339,6 @@
 				alert(message);
 				passedStepTracker = depending_steps[0];
 			}
-			return depending_steps;
 		}
 
 		// Prepares the click events on the document.
