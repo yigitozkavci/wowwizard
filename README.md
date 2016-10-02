@@ -21,4 +21,4 @@ $ gulp watch
 ```
 after you installed both npm and this package's devDependencies(which include gulp & its packages).
 ## License
-All code licensed under the MIT License. See <a href="https://github.com/yigitozkavci/wowwizard/blob/master/LICENSE">link</a>. As long as you don't remove my name from the source, you are free to use it anywhere.
+All code licensed under the MIT License. See <a href="https://github.com/yigitozkavci/wowwizard/blob/master/LICENSE">here</a>. As long as you don't remove my name from the source, you are free to use it anywhere.
