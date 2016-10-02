@@ -319,7 +319,7 @@
 		}
 
 		// If the step has steps depending on it, function returns array id's of them.
-		function _hasToCleanFutureSteps($step) {
+		function _clearFutureSteps($step) {
 			var depending_steps = [];
 			for(var i = currentStep+1; i <= passedStepTracker; i++) {
 				var $step_filled = wizard.settings.steps[i];
@@ -406,9 +406,7 @@
 		function _nextStep() {
 			var $step = wizard.settings.steps[currentStep];
 
-			if (_hasToCleanFutureSteps($step).length > 0) {
-				console.log('hey!!');
-			}
+			_clearFutureSteps($step);
 
 			if($step.isDependent) {
 				$step = _getDependentStep($step);
