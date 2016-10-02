@@ -25,13 +25,11 @@
 			},
 			onNextStep: function() {},
 			onPrevStep: function() {},
-			onFinish: function(data) {},
+			onFinish: function(data) {}
 		};
 
 		// Wizard settings
-		var settings = $.extend(true, {}, $.fn.wowWizard.defaults, options);
-
-		this.settings = settings;
+		this.settings = $.extend(true, {}, $.fn.wowWizard.defaults, options);
 		var wizard = this; // Global wizard variable which is going to be used in all plugin functions.
 
 		// Creates theme colors and getter/setters for them.
