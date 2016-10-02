@@ -22,5 +22,3 @@ gulp.task('watch', function() {
   gulp.watch('dev/js/*.js', ['compress']);
   gulp.watch('dev/css/*.scss', ['sass']);
 });
-
-gulp.task('default', ['sass', 'compress' , 'watch']);
