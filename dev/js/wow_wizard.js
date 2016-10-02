@@ -2,7 +2,7 @@
 	$.fn.wowWizard = function(options) {
 
 		'use strict'; // For increased coolness through the code.
-		
+
 		function warning(message){
 		    console.error("Warning: " + message);
 		}
@@ -55,7 +55,7 @@
 				blueberry: {
 					activeIndicatorBackgroundColor: '#4068D6',
 					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#69181E',
+					questionAndAnswerTextColor: '#204097',
 					circleColor: '#204ABD',
 					outlineColor: '#4068D6',
 					lineColor: '#4068D6',
@@ -70,7 +70,7 @@
 			};
 			var styles = {
 				material: {
-					borderRadius: '0.2px'
+					borderRadius: '3px'
 				}
 			}
 			var apply = function($step_html, callback) {
@@ -100,7 +100,7 @@
 					// Single Image Choice
 					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
 					$step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid '+choice.imageChoiceBorderColor);
-					
+
 					// Multiple Choice Buttons
 					$step_html.find('.fancy-checkbox .button').css('background-color', choice.passiveButtonBackgroundColor);
 					$step_html.find('.fancy-checkbox .button.active').css('background-color', choice.activeButtonBackgroundColor);
@@ -211,7 +211,7 @@
 						$button = $widget.find('button'),
 			            $checkbox = $widget.find('input:checkbox'),
 			            color = $button.data('color');
-			            
+
 
 			        // Event Handlers
 			        $button.unbind().on('click', function () {
@@ -243,7 +243,7 @@
 		// Starting by syncing the step.
 		_syncStep(this);
 
-		// Synchronizes the step. Parses the html, creates the event handlers, 
+		// Synchronizes the step. Parses the html, creates the event handlers,
 		// looks if user has answered this step and if so, uses those answers again.
 		function _syncStep() {
 			var $step = wizard.settings.steps[currentStep];
@@ -276,7 +276,7 @@
 
 		}
 
-		// If the step is dependent, gets in the "steps" array of it and 
+		// If the step is dependent, gets in the "steps" array of it and
 		// pulls the step that needs to be triggered.
 		function _getDependentStep($step) {
 			for(var i = 0; i < $step.steps.length; i++) {
@@ -363,7 +363,7 @@
 			// Checking if this is the last scene of the wizard.
 			if(++currentStep >= wizard.settings.steps.length) {
 				currentStep--;
-				_finalStep(wizard); 
+				_finalStep(wizard);
 			} else {
 				// There is no problem, passing to the next step.
 				if(currentStep > passedStepTracker)
@@ -538,7 +538,7 @@
 
 			// Rendering the last step.
 			wizard.html(_renderLastStep());
-			
+
 			// Preparing the eventual data.
 			var data = {};
 			$.each(wizard.settings.steps, function(k, step) {
@@ -580,7 +580,7 @@
 			var $question = $('<div class="wow-wizard-step-question"></div>');
 			$question.append($('<h2 class="wow-wizard-step-question-title">'+$step.questionTitle+'</h2>'));
 			$step.questionDescription ? $question.append($('<p class="wow-wizard-step-question-description">'+$step.questionDescription+'</p>')) : null;
-			
+
 			// Preparing answers
 			var $answers = $('<div class="wow-wizard-step-answers"></div>');
 			switch($step.type) {
@@ -676,7 +676,7 @@
 			var $parsed_step = $('<div class="wow-wizard-last-step"><h1>Thanks for using WowWizard!</h1><p>We\'ve got all your information. Will reach you soon.</p><a href="#">RETURN HOME</a></div>');
 			return $parsed_step;
 		}
-		
+
 		// Selects the given element choice.
 		function _selectElement(type, $element) {
 			if($element.isAvailable) {
@@ -688,7 +688,7 @@
 						$element.find("i").fadeIn(200, function() {
 							$element.isAvailable = true;
 							$element.data('selected', true);
-						});		
+						});
 						$element.animate({
 							backgroundColor: '#59BAFF'
 						}, 200, null);
@@ -704,7 +704,7 @@
 						$element.find(".circle-select .inner-circle-icon").fadeIn(200);
 						$element.data('selected', true);
 						break;
-				}	
+				}
 			}
 		}
 
