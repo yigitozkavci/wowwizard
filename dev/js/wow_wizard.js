@@ -67,36 +67,6 @@
 					imageChoiceBorderColor: "#4068D6",
 					imageChoiceCircleBackgroundColor: "#A2B5EB"
 				},
-        kiwifruit: {
-					activeIndicatorBackgroundColor: '#67A60A',
-					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#022601',
-					circleColor: '#3B7302',
-					outlineColor: '#67A60A',
-					lineColor: '#67A60A',
-					activeButtonBackgroundColor: '#67A60A',
-          passiveButtonBackgroundColor: '#FFF',
-					activeButtonTextColor: '#FFF',
-					passiveButtonTextColor: '#000',
-					buttonTextColor: '#FFF',
-					imageChoiceBorderColor: "#67A60A",
-					imageChoiceCircleBackgroundColor: "#B1D923"
-				},
-        pineapple: {
-					activeIndicatorBackgroundColor: '#FEE948',
-					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#C3893A',
-					circleColor: '#EDC834',
-					outlineColor: '#FEE948',
-					lineColor: '#FEE948',
-					activeButtonBackgroundColor: '#FEE948',
-          passiveButtonBackgroundColor: '#FFF',
-					activeButtonTextColor: '#FFF',
-					passiveButtonTextColor: '#000',
-					buttonTextColor: '#FFF',
-					imageChoiceBorderColor: "#FEE948",
-					imageChoiceCircleBackgroundColor: "#EDC834"
-				},
         peach: {
 					activeIndicatorBackgroundColor: '#DB764F',
 					activeIndicatorTextColor: '#FFF',
@@ -111,11 +81,56 @@
 					buttonTextColor: '#FFF',
 					imageChoiceBorderColor: "#DB764F",
 					imageChoiceCircleBackgroundColor: "#9E1E5B"
+				},
+        cherry: {
+					activeIndicatorBackgroundColor: '#CF3851',
+					activeIndicatorTextColor: '#FFF',
+					questionAndAnswerTextColor: '#F0738A',
+					circleColor: '#F0738A',
+					outlineColor: '#CF3851',
+					lineColor: '#CF3851',
+				  activeButtonBackgroundColor: '#CF3851',
+          passiveButtonBackgroundColor: '#FFF',
+					activeButtonTextColor: '#FFF',
+					passiveButtonTextColor: '#000',
+					buttonTextColor: '#FFF',
+					imageChoiceBorderColor: "#CF3851",
+					imageChoiceCircleBackgroundColor: "#F0738A"
+				},
+        passionfruit: {
+					activeIndicatorBackgroundColor: '#872945',
+					activeIndicatorTextColor: '#FFF',
+					questionAndAnswerTextColor: '#5BA300',
+					circleColor: '#5BA300',
+					outlineColor: '#872945',
+					lineColor: '#872945',
+				  activeButtonBackgroundColor: '#872945',
+          passiveButtonBackgroundColor: '#FFF',
+					activeButtonTextColor: '#FFF',
+					passiveButtonTextColor: '#000',
+					buttonTextColor: '#FFF',
+					imageChoiceBorderColor: "#872945",
+					imageChoiceCircleBackgroundColor: "#5BA300"
+				},
+        coconut: {
+					activeIndicatorBackgroundColor: '#5CD6FF',
+					activeIndicatorTextColor: '#FFF',
+					questionAndAnswerTextColor: '#834820',
+					circleColor: '#834820',
+					outlineColor: '#5CD6FF',
+					lineColor: '#5CD6FF',
+				  activeButtonBackgroundColor: '5CD6FF',
+          passiveButtonBackgroundColor: '#FFF',
+					activeButtonTextColor: '#FFF',
+					passiveButtonTextColor: '#000',
+					buttonTextColor: '#FFF',
+					imageChoiceBorderColor: "#5CD6FF",
+					imageChoiceCircleBackgroundColor: "#834820"
 				}
 			};
 			var styles = {
 				material: {
-					borderRadius: '3px'
+					borderRadius: '4px'
 				}
 			}
 			var apply = function($step_html, callback) {
