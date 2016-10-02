@@ -126,6 +126,7 @@
             buttonTextColor: '#FFF',
             imageChoiceBorderColor: "#5CD6FF",
             imageChoiceCircleBackgroundColor: "#834820"
+				},
         lime: {
             activeIndicatorBackgroundColor: '#2ECC71',
             activeIndicatorTextColor: '#FFF',
@@ -140,7 +141,7 @@
             buttonTextColor: '#FFF',
             imageChoiceBorderColor: "#2ECC71",
             imageChoiceCircleBackgroundColor: "#71E0A0"
-            },
+        },
         banana: {
             activeIndicatorBackgroundColor: '#F1C40F',
             activeIndicatorTextColor: '#FFF',
@@ -155,7 +156,7 @@
             buttonTextColor: '#FFF',
             imageChoiceBorderColor: "#F1C40F",
             imageChoiceCircleBackgroundColor: "#F9DA5F"
-            }
+         }
       };
 			var styles = {
 				material: {
