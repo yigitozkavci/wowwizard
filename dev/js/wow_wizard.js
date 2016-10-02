@@ -2,7 +2,7 @@
 	$.fn.wowWizard = function(options) {
 
 		'use strict'; // For increased coolness through the code.
-		
+
 		function warning(message){
 		    console.error("Warning: " + message);
 		}
@@ -36,68 +36,128 @@
 
 		// Creates theme colors and getter/setters for them.
 		var THEME = (function() {
-			var colors = {
-				pomegranate: {
-					activeIndicatorBackgroundColor: '#F44A56',
-					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#69181E',
-					circleColor: '#C23640',
-					outlineColor: '#F44A56',
-					lineColor: '#F44A56',
-					activeButtonBackgroundColor: '#F44A56',
-					passiveButtonBackgroundColor: '#FFF',
-					activeButtonTextColor: '#FFF',
-					passiveButtonTextColor: '#000',
-					buttonTextColor: '#FFF',
-					imageChoiceBorderColor: "#F44A56",
-					imageChoiceCircleBackgroundColor: "#FFB3B8"
+      var colors = {
+        pomegranate: {
+            activeIndicatorBackgroundColor: '#F44A56',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#69181E',
+            circleColor: '#C23640',
+            outlineColor: '#F44A56',
+            lineColor: '#F44A56',
+            activeButtonBackgroundColor: '#F44A56',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#F44A56",
+            imageChoiceCircleBackgroundColor: "#FFB3B8"
+        },
+        blueberry: {
+            activeIndicatorBackgroundColor: '#4068D6',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#204097',
+            circleColor: '#204ABD',
+            outlineColor: '#4068D6',
+            lineColor: '#4068D6',
+            activeButtonBackgroundColor: '#4068D6',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#4068D6",
+            imageChoiceCircleBackgroundColor: "#A2B5EB"
+        },
+        peach: {
+            activeIndicatorBackgroundColor: '#DB764F',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#7A2851',
+            circleColor: '#7A2851',
+            outlineColor: '#DB764F',
+            lineColor: '#DB764F',
+            activeButtonBackgroundColor: '#DB764F',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#DB764F",
+            imageChoiceCircleBackgroundColor: "#9E1E5B"
+        },
+        cherry: {
+            activeIndicatorBackgroundColor: '#CF3851',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#F0738A',
+            circleColor: '#F0738A',
+            outlineColor: '#CF3851',
+            lineColor: '#CF3851',
+            activeButtonBackgroundColor: '#CF3851',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#CF3851",
+            imageChoiceCircleBackgroundColor: "#F0738A"
+        },
+        passionfruit: {
+            activeIndicatorBackgroundColor: '#872945',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#5BA300',
+            circleColor: '#5BA300',
+            outlineColor: '#872945',
+            lineColor: '#872945',
+            activeButtonBackgroundColor: '#872945',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#872945",
+            imageChoiceCircleBackgroundColor: "#5BA300"
+        },
+        coconut: {
+            activeIndicatorBackgroundColor: '#5CD6FF',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#834820',
+            circleColor: '#834820',
+            outlineColor: '#5CD6FF',
+            lineColor: '#5CD6FF',
+            activeButtonBackgroundColor: '#5CD6FF',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#5CD6FF",
+            imageChoiceCircleBackgroundColor: "#834820"
 				},
-				blueberry: {
-					activeIndicatorBackgroundColor: '#4068D6',
-					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#69181E',
-					circleColor: '#204ABD',
-					outlineColor: '#4068D6',
-					lineColor: '#4068D6',
-					activeButtonBackgroundColor: '#4068D6',
-					passiveButtonBackgroundColor: '#FFF',
-					activeButtonTextColor: '#FFF',
-					passiveButtonTextColor: '#000',
-					buttonTextColor: '#FFF',
-					imageChoiceBorderColor: "#4068D6",
-					imageChoiceCircleBackgroundColor: "#A2B5EB"
-				},
-				lime: {
-					activeIndicatorBackgroundColor: '#2ECC71',
-					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#69181E',
-					circleColor: '#1D9A52',
-					outlineColor: '#2ECC71',
-					lineColor: '#2ECC71',
-					activeButtonBackgroundColor: '#2ECC71',
-					passiveButtonBackgroundColor: '#FFF',
-					activeButtonTextColor: '#FFF',
-					passiveButtonTextColor: '#000',
-					buttonTextColor: '#FFF',
-					imageChoiceBorderColor: "#2ECC71",
-					imageChoiceCircleBackgroundColor: "#71E0A0"
-				},
-				banana: {
-					activeIndicatorBackgroundColor: '#F1C40F',
-					activeIndicatorTextColor: '#FFF',
-					questionAndAnswerTextColor: '#69181E',
-					circleColor: '#F39C12',
-					outlineColor: '#F1C40F',
-					lineColor: '#F1C40F',
-					activeButtonBackgroundColor: '#F1C40F',
-					passiveButtonBackgroundColor: '#FFF',
-					activeButtonTextColor: '#FFF',
-					passiveButtonTextColor: '#000',
-					buttonTextColor: '#FFF',
-					imageChoiceBorderColor: "#F1C40F",
-					imageChoiceCircleBackgroundColor: "#F9DA5F"
-				}
-			};
+        lime: {
+            activeIndicatorBackgroundColor: '#2ECC71',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#69181E',
+            circleColor: '#1D9A52',
+            outlineColor: '#2ECC71',
+            lineColor: '#2ECC71',
+            activeButtonBackgroundColor: '#2ECC71',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#2ECC71",
+            imageChoiceCircleBackgroundColor: "#71E0A0"
+        },
+        banana: {
+            activeIndicatorBackgroundColor: '#F1C40F',
+            activeIndicatorTextColor: '#FFF',
+            questionAndAnswerTextColor: '#69181E',
+            circleColor: '#F39C12',
+            outlineColor: '#F1C40F',
+            lineColor: '#F1C40F',
+            activeButtonBackgroundColor: '#F1C40F',
+            passiveButtonBackgroundColor: '#FFF',
+            activeButtonTextColor: '#FFF',
+            passiveButtonTextColor: '#000',
+            buttonTextColor: '#FFF',
+            imageChoiceBorderColor: "#F1C40F",
+            imageChoiceCircleBackgroundColor: "#F9DA5F"
+         }
+      };
 			var styles = {
 				material: {
 					borderRadius: '0.2px'
@@ -130,7 +190,7 @@
 					// Single Image Choice
 					$step_html.find('.multiple-image-choice .circle-select .background').css('background-color', choice.imageChoiceCircleBackgroundColor);
 					$step_html.find('.multiple-image-choice, .multiple-image-choice .circle-select').css('border', '2px solid '+choice.imageChoiceBorderColor);
-					
+
 					// Multiple Choice Buttons
 					$step_html.find('.fancy-checkbox .button').css('background-color', choice.passiveButtonBackgroundColor);
 					$step_html.find('.fancy-checkbox .button.active').css('background-color', choice.activeButtonBackgroundColor);
@@ -241,7 +301,7 @@
 						$button = $widget.find('button'),
 			            $checkbox = $widget.find('input:checkbox'),
 			            color = $button.data('color');
-			            
+
 
 			        // Event Handlers
 			        $button.unbind().on('click', function () {
@@ -273,7 +333,7 @@
 		// Starting by syncing the step.
 		_syncStep(this);
 
-		// Synchronizes the step. Parses the html, creates the event handlers, 
+		// Synchronizes the step. Parses the html, creates the event handlers,
 		// looks if user has answered this step and if so, uses those answers again.
 		function _syncStep() {
 			var $step = wizard.settings.steps[currentStep];
@@ -306,7 +366,7 @@
 
 		}
 
-		// If the step is dependent, gets in the "steps" array of it and 
+		// If the step is dependent, gets in the "steps" array of it and
 		// pulls the step that needs to be triggered.
 		function _getDependentStep($step) {
 			for(var i = 0; i < $step.steps.length; i++) {
@@ -393,7 +453,7 @@
 			// Checking if this is the last scene of the wizard.
 			if(++currentStep >= wizard.settings.steps.length) {
 				currentStep--;
-				_finalStep(wizard); 
+				_finalStep(wizard);
 			} else {
 				// There is no problem, passing to the next step.
 				if(currentStep > passedStepTracker)
@@ -568,7 +628,7 @@
 
 			// Rendering the last step.
 			wizard.html(_renderLastStep());
-			
+
 			// Preparing the eventual data.
 			var data = {};
 			$.each(wizard.settings.steps, function(k, step) {
@@ -610,7 +670,7 @@
 			var $question = $('<div class="wow-wizard-step-question"></div>');
 			$question.append($('<h2 class="wow-wizard-step-question-title">'+$step.questionTitle+'</h2>'));
 			$step.questionDescription ? $question.append($('<p class="wow-wizard-step-question-description">'+$step.questionDescription+'</p>')) : null;
-			
+
 			// Preparing answers
 			var $answers = $('<div class="wow-wizard-step-answers"></div>');
 			switch($step.type) {
@@ -706,7 +766,7 @@
 			var $parsed_step = $('<div class="wow-wizard-last-step"><h1>Thanks for using WowWizard!</h1><p>We\'ve got all your information. Will reach you soon.</p><a href="#">RETURN HOME</a></div>');
 			return $parsed_step;
 		}
-		
+
 		// Selects the given element choice.
 		function _selectElement(type, $element) {
 			if($element.isAvailable) {
@@ -718,7 +778,7 @@
 						$element.find("i").fadeIn(200, function() {
 							$element.isAvailable = true;
 							$element.data('selected', true);
-						});		
+						});
 						$element.animate({
 							backgroundColor: '#59BAFF'
 						}, 200, null);
@@ -734,7 +794,7 @@
 						$element.find(".circle-select .inner-circle-icon").fadeIn(200);
 						$element.data('selected', true);
 						break;
-				}	
+				}
 			}
 		}
 
