@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>WOW Wizard - QUnit Tests</title>
+    <!-- QUnit CSS Styles -->
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.0.1.css">
+</head>
+<body>
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <div class="wow-wizard"></div>
+    </div>
+    <!-- Local Copy of jQuery -->
+    <script src="../dist/libs/jquery/dist/jquery.min.js"/>
+    <!-- Prevent collision -->
+    <script>jQuery.noConflict()</script>
+    <!--QUnit JS Lib-->
+    <script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
+    <!-- Load WOW Lib -->
+    <script src="../dev/js/wow_wizard.js"></script>
+    <!-- Load Test Scripts -->
+    <script src="js/sample-test.js"></script>
+</body>
+</html>

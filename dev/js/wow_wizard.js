@@ -29,8 +29,7 @@
 		};
 
 		// Wizard settings
-		var settings = $.extend({}, $.fn.wowWizard.defaults, options);
-		settings.errors = $.extend({}, $.fn.wowWizard.defaults.errors, options.errors);
+		var settings = $.extend(true, {}, $.fn.wowWizard.defaults, options);
 		this.settings = settings;
 		var wizard = this; // Global wizard variable which is going to be used in all plugin functions.
 
