@@ -29,3 +29,5 @@ gulp.task('watch', function() {
   gulp.watch('dev/js/*.js', ['test', 'compress']);
   gulp.watch('dev/css/*.scss', ['sass']);
 });
+
+gulp.task('default', ['test', 'compress', 'sass']);
