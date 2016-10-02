@@ -3,6 +3,8 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var rename = require('gulp-rename');
 var autoprefix = require('gulp-autoprefixer');
+var qunit = require('gulp-qunit');
+
 
 gulp.task('compress', function() {
   return gulp.src('dev/js/wow_wizard.js')
@@ -18,7 +20,12 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('dist/css'));
 });
 
+gulp.task('test', function() {
+  return gulp.src('tests/test-runner.html')
+    .pipe(qunit())
+});
+
 gulp.task('watch', function() {
-  gulp.watch('dev/js/*.js', ['compress']);
+  gulp.watch('dev/js/*.js', ['test', 'compress']);
   gulp.watch('dev/css/*.scss', ['sass']);
 });
