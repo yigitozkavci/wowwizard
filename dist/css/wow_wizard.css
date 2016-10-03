@@ -115,7 +115,8 @@
   .wow-wizard-step .multiple-image-choices {
     width: 100%;
     display: block;
-    float: left; }
+    float: left; 
+    margin-left: 9px;}
   .wow-wizard-step .multiple-image-choice {
     width: 120px;
     height: 115px;
