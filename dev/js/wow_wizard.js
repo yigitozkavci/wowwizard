@@ -10,7 +10,7 @@
 		$.fn.wowWizard.defaults = {
 			steps: [],
 			theme: 'pomegranate',
-			alerts: false,
+			alerts: true,
 			loader: '../../img/loader.gif',
 			errors: {
 				form: {
