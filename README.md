@@ -12,7 +12,7 @@ $ npm install wowwizard
 $ bower install wowwizard
 ```
 ## Getting Started
-Gettings started guide and complete documentation can be found [here](http://yigitozkavci.github.io/wowwizard/).
+Getting started guide and complete documentation can be found [here](http://yigitozkavci.github.io/wowwizard/).
 
 You can also check out examples directory to get a sneak peek what it looks like.
 ## Contributing
@@ -23,6 +23,6 @@ There is already a .gulpfile inside and you can compile those by simply typing
 ```
 $ gulp watch
 ```
-after you installed both npm and this package's devDependencies(which include gulp & its packages).
+after you have installed both npm and this package's devDependencies(which include gulp & its packages).
 ## License
 All code licensed under the MIT License. See <a href="https://github.com/yigitozkavci/wowwizard/blob/master/LICENSE">here</a>. As long as you don't remove my name from the source, you are free to use it anywhere.
