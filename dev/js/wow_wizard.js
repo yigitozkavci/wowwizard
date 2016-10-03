@@ -378,6 +378,33 @@
 			}
 		}
 
+		// If the step has steps depending on it, shows alert and clear the future steps.
+		function _clearFutureSteps($step) {
+			var depending_steps = [];
+			for(var i = currentStep+1; i <= passedStepTracker; i++) {
+				var step_filled = wizard.settings.steps[i];
+				if(step_filled.isDependent) {
+					var found = false;
+					for(var j = 0; j < step_filled.steps.length && !found; j++) {
+						if(step_filled.steps[j].triggerStep == currentStep) {
+							depending_steps.push(i);
+							wizard.settings.steps[i].given_answer = undefined;
+							found = true;
+						}
+					}
+				}
+			}
+			if(depending_steps.length > 0) {
+				var message = (depending_steps.length == 1)?'Step ':'Steps ';
+				message += depending_steps[0]+1;
+				for(var i = 1; i < depending_steps.length; i++) message += ', '+depending_steps[i]+1;
+				message += ' will change.'; 
+				alert(message);
+				passedStepTracker = depending_steps[0];
+
+			}
+		}
+
 		// Prepares the click events on the document.
 		function _prepareEventHandlers($step, $step_html) {
 
@@ -441,6 +468,9 @@
 		// Progresses to the next step.
 		function _nextStep() {
 			var $step = wizard.settings.steps[currentStep];
+
+			_clearFutureSteps($step);
+
 			if($step.isDependent) {
 				$step = _getDependentStep($step);
 			}
