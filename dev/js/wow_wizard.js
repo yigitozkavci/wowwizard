@@ -10,6 +10,7 @@
 		$.fn.wowWizard.defaults = {
 			steps: [],
 			theme: 'pomegranate',
+			alerts: false,
 			loader: '../../img/loader.gif',
 			errors: {
 				form: {
@@ -399,7 +400,8 @@
 				message += depending_steps[0]+1;
 				for(var i = 1; i < depending_steps.length; i++) message += ', '+depending_steps[i]+1;
 				message += ' will change.'; 
-				alert(message);
+				if(wizard.settings.alerts) alert(message);
+				// else console.log(message);
 				passedStepTracker = depending_steps[0];
 
 			}
