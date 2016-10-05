@@ -38,6 +38,7 @@ class WowWizard {
 			steps: [],
 			theme: 'pomegranate',
 			loader: '../../img/loader.gif',
+			nextButtonText: 'Next',
 			errors: {
 				form: {
 					required: "You have to fill in all required fields.",
@@ -98,7 +99,7 @@ class WowWizard {
 					$(".fancy-checkbox").each(function() {
 						var $button = $(this).find("button");
 						if($step.given_answer.indexOf($button.data('value')) != -1) {
-							wizard.checkboxBeautifier.selectButton($button);
+							this._elem.checkboxBeautifier.selectButton($button);
 						}
 					});
 					break;
@@ -110,17 +111,17 @@ class WowWizard {
 					});
 					break;
 				case 'multiple_image_choice':
-					var $konut_choices = wizard.find('.multiple-image-choice');
+					var $konut_choices = this._elem.find('.multiple-image-choice');
 					$konut_choices.each(function(index: any) {
 						if($step.given_answer.indexOf($(this).data('slug')) != -1) {
 							var $temp = $(this);
 							$temp.data('isAvailable', true);
-							_selectElement('multiple_image_choice', $temp);
+							this._selectElement('multiple_image_choice', $temp);
 						}
 					});
 					break;
 				case 'textarea':
-					wizard.find("textarea").val($step.given_answer);
+					this._elem.find("textarea").val($step.given_answer);
 					break;
 			}
 		}
@@ -227,15 +228,15 @@ class WowWizard {
 		// Preparing the question and answer div.
 		$q_and_a.append($question);
 		$q_and_a.append($answers);
-		if(CONFIG.shouldHaveNextButton($step)) {
-			$q_and_a.append($('<div id="wow-wizard-next-step" class="pull-right">'+wizard.settings.nextButtonText+'</div>'));
+		if(this._config.shouldHaveNextButton($step)) {
+			$q_and_a.append($('<div id="wow-wizard-next-step" class="pull-right">'+this._settings.nextButtonText+'</div>'));
 		}
 		$q_and_a.append($('<div id="wow-alert" style="display:none;"></div>'));
 
 		// Preparing the step indicators.
 		var $step_indicators = $('<div class="wow-wizard-step-indicators col-xs-12"></div>');
-		for(var i = 0; i < wizard.settings.steps.length; i++) {
-			var $step_indicator = $('<div class="wow-wizard-step-indicator" data-step="'+(i)+'"><div class="step-id"><span>'+(i+1)+'</span></div><b>'+wizard.settings.steps[i].indicatorName+'</b></div>');
+		for(var i = 0; i < this._settings.steps.length; i++) {
+			var $step_indicator = $('<div class="wow-wizard-step-indicator" data-step="'+(i)+'"><div class="step-id"><span>'+(i+1)+'</span></div><b>'+this._settings.steps[i].indicatorName+'</b></div>');
 			$step_indicators.append($step_indicator);
 		}
 
@@ -251,14 +252,14 @@ class WowWizard {
 		var $step_buttons = $step_html.find(".wow-wizard-step-indicator");
 		$step_buttons.each(function(index: any) {
 			var step_id = $(this).data("step");
-			if(passedStepTracker > step_id) {
+			if(this.passedStepTracker > step_id) {
 				$(this).find(".step-id").html('<div class="check"></div>');
 			}
-			if(currentStep == step_id){
+			if(this.currentStep == step_id){
 				$(this).addClass('visited');
 			}
 			$(this).click(function() {
-				_goToStep($(this));
+				this._goToStep($(this));
 			});
 		});
 
@@ -269,35 +270,35 @@ class WowWizard {
 		// Next step and single-choice buttons trigger.
 		var $next_step_button = $step_html.find("#wow-wizard-next-step");
 		$next_step_button.click(function() {
-			_nextStep();
+			this._nextStep();
 		});
 		$("div.single-choice-button").click(function() {
 			$(this).data('selected', true);
 			$(this).data('selected');
-			_nextStep();
+			this._nextStep();
 		});
 
 		// Binding ENTER key press event if this step is suitable.
 		if($step.type == 'form') {
-			$(wizard).bind('keypress', function(e: any) {
+			$(this._elem).bind('keypress', function(e: any) {
 				var code = e.keyCode || e.which;
 				if(code == 13) { //Enter keycode
-					_nextStep();
+					this._nextStep();
 				}
 			});
 		}
 
 		// Single image choice handler.
 		if($step.type == 'multiple_image_choice') {
-			var $multiple_image_choices = wizard.find('.multiple-image-choice');
+			var $multiple_image_choices = this._elem.find('.multiple-image-choice');
 			$multiple_image_choices.each(function(index: any) {
 				var $multiple_image_choice = $(this);
 				$multiple_image_choice.data('isAvailable', true);
 				$multiple_image_choice.click(function() {
 					if($multiple_image_choice.data('selected')) {
-						_unSelectElement('multiple_image_choice', $multiple_image_choice);
+						this._unSelectElement('multiple_image_choice', $multiple_image_choice);
 					} else {
-						_selectElement('multiple_image_choice', $multiple_image_choice);
+						this._selectElement('multiple_image_choice', $multiple_image_choice);
 					}
 				});
 			});

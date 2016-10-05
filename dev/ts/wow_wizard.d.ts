@@ -37,4 +37,5 @@ interface WizardOptions {
 	onNextStep: () => void;
 	onPrevStep: () => void;
 	onFinish: (data: string) => void;
+	nextButtonText: string;
 }
