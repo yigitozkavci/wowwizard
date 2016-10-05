@@ -9,6 +9,7 @@
 			steps: [],
 			theme: 'pomegranate',
 			loader: '../../img/loader.gif',
+			nextButtonText: 'Next',
 			errors: {
 				form: {
 					required: "You have to fill in all required fields.",
